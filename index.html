@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171625">
+  <title>밤편지 | 한국 캐릭터 마켓</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #171625;
+      --panel: #222132;
+      --line: #403c50;
+      --text: #f8f2eb;
+      --muted: #c0b8c8;
+      --peach: #ffc3aa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      word-break: keep-all;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button, input, select, textarea {
+      color: inherit;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+    button:hover { border-color: var(--peach); }
+    :focus-visible { outline: 3px solid var(--peach); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .shell { width: min(1150px, 92%); margin: auto; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      background: none; border: 0; padding: 0; color: var(--peach);
+      font: 700 30px Georgia, "Batang", serif; letter-spacing: -.09em;
+    }
+    nav, .filters, .actions, .prompts { display: flex; flex-wrap: wrap; gap: 8px; }
+    nav button, .filter { background: transparent; }
+    button[aria-pressed="true"], .primary {
+      background: var(--peach); color: #321f29; border-color: var(--peach);
+    }
+    main { padding: 28px 0 58px; }
+    .feature {
+      position: relative; isolation: isolate; overflow: hidden;
+      background: linear-gradient(110deg, #392d4e, #5d496c 64%, #a47480);
+      border-radius: 20px; padding: clamp(24px, 5vw, 60px);
+      min-height: 285px; display: flex; align-items: center;
+    }
+    .feature-copy { position: relative; z-index: 1; max-width: 65%; }
+    .feature::before {
+      content: ""; position: absolute; width: 150px; height: 150px;
+      border-radius: 50%; right: 8%; top: 20px; background: #ffe0bb;
+      box-shadow: 0 0 70px #ffdac347;
+    }
+    .feature::after {
+      content: ""; position: absolute; inset: 45% 0 0 48%; z-index: -1;
+      background: #332d48;
+      clip-path: polygon(0 100%,0 74%,8% 74%,8% 50%,16% 50%,16% 65%,25% 65%,25% 22%,34% 22%,34% 63%,44% 63%,44% 39%,52% 39%,52% 58%,61% 58%,61% 10%,62% 0,63% 10%,63% 58%,74% 58%,74% 35%,83% 35%,83% 54%,92% 54%,92% 20%,100% 20%,100% 100%);
+    }
+    .feature small { color: #ffe0c5; }
+    h1 { font: 600 clamp(32px, 5vw, 60px)/1.12 Georgia, "Batang", serif; margin: 12px 0; letter-spacing: -.08em; }
+    .feature p { margin: 0 0 20px; line-height: 1.65; }
+    h2 { margin: 0; font-size: 26px; letter-spacing: -.06em; }
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; margin: 30px 0 16px;
+    }
+    #search { width: min(340px, 100%); }
+    .filter { border-radius: 30px; padding: 7px 14px; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
+    .card { position: relative; min-width: 0; border: 1px solid var(--line); border-radius: 15px; overflow: hidden; background: var(--panel); }
+    .card-open { display: block; width: 100%; padding: 0; border: none; background: none; text-align: left; }
+    .card-open:focus-visible { outline-offset: -4px; }
+    .card-copy { padding: 17px; }
+    .card-copy small, .muted, .note { color: var(--muted); }
+    .card-copy h3 { margin: 5px 0; font-size: 23px; }
+    .card-copy p { margin: 0; font-size: 14px; line-height: 1.6; }
+    .heart { position: absolute; right: 10px; top: 10px; border: 0; border-radius: 50%; background: #201b2bcc; color: white; width: 38px; height: 38px; padding: 0; font-size: 22px; }
+    .heart[aria-pressed="true"] { background: #4c2734; color: #ffb4af; }
+
+    /* 각 이야기의 색과 의상을 사용하는 오리지널 캐릭터 초상화 */
+    .portrait {
+      --hair: #312a36; --coat: #aa7382; --sky: #9f829e;
+      position: relative; isolation: isolate; height: 176px; overflow: hidden;
+      background: radial-gradient(circle at 76% 25%, #ffe6c2 0 16px, transparent 17px),
+                  linear-gradient(155deg, var(--sky), #49435f);
+    }
+    .portrait::before {
+      content: ""; position: absolute; inset: 55% -6px -5px;
+      background: repeating-linear-gradient(90deg, #272a4166 0 22px, transparent 22px 32px);
+      transform: skewY(-7deg);
+    }
+    .figure { position: absolute; left: 50%; bottom: -10px; width: 130px; height: 160px; transform: translateX(-50%); }
+    .shoulders { position: absolute; bottom: -22px; left: 4px; width: 124px; height: 82px; border-radius: 56% 56% 0 0; background: var(--coat); }
+    .neck { position: absolute; top: 91px; left: 55px; width: 21px; height: 25px; border-radius: 0 0 9px 9px; background: #e4ad94; }
+    .hair { position: absolute; top: 7px; left: 25px; width: 81px; height: 102px; border-radius: 48% 50% 18% 26%; background: var(--hair); }
+    .face { position: absolute; top: 25px; left: 36px; width: 62px; height: 77px; border-radius: 46% 45% 49% 48%; background: linear-gradient(110deg,#edb79c,#ffe1c7); }
+    .fringe { position: absolute; inset: 9px 23px auto 26px; height: 58px; background: var(--hair); clip-path: polygon(0 100%,0 36%,16% 9%,46% 0,76% 5%,97% 30%,100% 77%,77% 55%,81% 71%,57% 42%,37% 75%,41% 52%,19% 87%); }
+    .eyes { position: absolute; top: 36px; left: 12px; width: 9px; height: 5px; border-radius: 50%; background: #352a38; box-shadow: 29px 0 #352a38; }
+    .mouth { position: absolute; top: 57px; left: 27px; width: 10px; height: 4px; border-bottom: 2px solid #b97774; border-radius: 50%; }
+    .short .hair { height: 79px; }
+    .long .hair { height: 145px; width: 91px; left: 21px; }
+    .long .fringe { transform: scaleX(-1); }
+    .glasses .eyes::before {
+      content: ""; position: absolute; left: -4px; top: -5px; width: 15px; height: 12px;
+      border: 1px solid #4e4651; border-radius: 45%; box-shadow: 29px 0 0 -1px #f5d7be, 29px 0 #4e4651;
+    }
+    .glasses .eyes::after { content: ""; position: absolute; top: 0; left: 29px; width: 8px; height: 5px; border-radius: 50%; background: #352a38; }
+
+    dialog {
+      color: var(--text); background: #211f30; border: 1px solid var(--line);
+      border-radius: 18px; padding: 0; width: min(540px, 94vw); max-height: 90dvh;
+    }
+    dialog::backdrop { background: #090713bc; }
+    .dialog-head, .composer { display: flex; align-items: center; gap: 10px; padding: 15px; }
+    .dialog-head { justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { font-size: 21px; }
+    .dialog-head small { color: var(--muted); }
+    #log { height: min(42dvh, 380px); overflow-y: auto; padding: 16px; }
+    .message { width: fit-content; max-width: 89%; margin: 7px 0; padding: 11px 14px; border-radius: 13px; background: #343045; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .mine { margin-left: auto; background: #624554; }
+    .prompts { padding: 0 15px; }
+    .prompts button { padding: 7px 10px; font-size: 13px; }
+    .composer input { min-width: 0; flex: 1; }
+    .note { margin: 0; padding: 0 15px 15px; font-size: 12px; line-height: 1.6; }
+    .workshop { padding: 16px; display: grid; gap: 12px; }
+    label { display: grid; gap: 5px; }
+    textarea { resize: vertical; min-height: 65px; }
+    @media (max-width: 760px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) {
+      header { align-items: flex-start; flex-direction: column; gap: 10px; }
+      nav button { padding: 7px 10px; font-size: 13px; }
+      .feature-copy { max-width: 80%; }
+      .feature::before { width: 75px; height: 75px; right: 5%; }
+      .grid { gap: 10px; }
+      .portrait { height: 140px; }
+      .figure { transform: translateX(-50%) scale(.85); transform-origin: bottom; }
+      .card-copy { padding: 11px; }
+      .card-copy h3 { font-size: 19px; }
+      .card-copy p { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <button class="brand" id="home">밤편지</button>
+      <nav aria-label="주요 메뉴">
+        <button data-view="market" aria-pressed="true">캐릭터 마켓</button>
+        <button data-view="history" aria-pressed="false">이어보기</button>
+        <button data-view="favorites" aria-pressed="false">찜한 캐릭터</button>
+        <button id="create">＋ 캐릭터 만들기</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="feature" id="feature">
+        <div class="feature-copy">
+          <small>이달의 단편 · 서울 SF</small>
+          <h1>별이 내리는 정류장</h1>
+          <p>성북동 막차가 떠난 뒤, 유나의 교통카드에 내일 날짜의 승차 기록이 찍혔다.</p>
+          <button class="primary" id="featured-chat">유나와 첫 장면 열기 →</button>
+        </div>
+      </section>
+      <section aria-labelledby="market-title">
+        <div class="section-head">
+          <h2 id="market-title">캐릭터 마켓</h2>
+          <input id="search" type="search" aria-label="캐릭터 검색" placeholder="이름, 장소, 이야기 검색">
+        </div>
+        <div class="filters" id="filters" aria-label="장르 필터"></div>
+        <div class="grid" id="grid"></div>
+        <p class="muted" id="empty" hidden></p>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="chat" aria-labelledby="chat-name">
+    <div class="dialog-head">
+      <div><small id="setting"></small><h2 id="chat-name"></h2></div>
+      <form method="dialog"><button aria-label="대화 닫기">닫기</button></form>
+    </div>
+    <div id="log" role="log" aria-label="대화 내용"></div>
+    <div class="prompts" id="prompts" aria-label="추천 대사"></div>
+    <form class="composer" id="composer">
+      <input id="message" maxlength="600" autocomplete="off" aria-label="보낼 대사" placeholder="대사를 입력하세요">
+      <button class="primary">보내기</button>
+    </form>
+    <p class="note" id="mode">대본형 채팅 · 대화는 이 브라우저에 저장됩니다.</p>
+  </dialog>
+
+  <dialog id="studio" aria-labelledby="studio-title">
+    <div class="dialog-head">
+      <h2 id="studio-title">내 캐릭터 만들기</h2>
+      <form method="dialog"><button aria-label="작업실 닫기">닫기</button></form>
+    </div>
+    <form class="workshop" id="creator">
+      <label>이름<input name="name" maxlength="18" required placeholder="예: 한이솔"></label>
+      <label>배경 장소<input name="place" maxlength="30" required placeholder="예: 여수의 심야 우체국"></label>
+      <label>장르<select name="genre"><option>판타지</option><option>로맨스</option><option>미스터리</option><option>SF</option></select></label>
+      <label>이야기 소개<textarea name="bio" maxlength="180" required placeholder="이곳에선 부치지 못한 편지만 배달된다."></textarea></label>
+      <label>캐릭터의 첫 대사<textarea name="opening" maxlength="300" required placeholder="이 편지, 십 년 전의 당신이 보낸 건데요."></textarea></label>
+      <label>숨겨 둔 비밀<textarea name="secret" maxlength="300" required placeholder="사실 이 우체국의 마지막 수신인은 저예요."></textarea></label>
+      <button class="primary">내 마켓에 저장하기</button>
+    </form>
+  </dialog>
+
+  <script>
+    // Standalone Korean adaptation of a character market, history, and workshop.
+    // The default engine uses authored dialogue. Compatible browsers can use
+    // their local Prompt API when a Korean-capable model is already available.
+    const cast = [
+      {
+        id: "yuna", name: "서유나", place: "서울 성북동", genre: "SF",
+        bio: "막차를 놓친 밤, 내일의 승차 기록을 발견한 버스 기사.",
+        opening: "잠깐만요. 카드 단말기에 내일 날짜가 떠요. 근데 같이 탔다는 사람이 당신인데요?",
+        looks: ["#947b9f", "#322e45", "#ac7585", "long"],
+        choices: [
+          ["도착지는 어디예요?", "한성대입구요. 이상하죠? 이 노선은 삼 년 전에 없어졌거든요."],
+          ["승차 기록을 보여줘요.", "여기요. 제 이름 옆에 연필로 쓴 별표 보이죠? 우리 아버지가 쓰던 표시예요."],
+          ["같이 타 볼까요?", "그럼 뒷문 말고 앞문으로 타요. 아버지는 제가 타면 늘 거울부터 맞췄거든요."]
+        ],
+        ending: "유나는 운전석 거울을 조금 낮췄다. 거울 속에서, 젊은 아버지가 두 사람의 표를 끊고 있었다."
+      },
+      {
+        id: "jun", name: "문해준", place: "부산 영도", genre: "미스터리",
+        bio: "현상한 필름마다 사라진 등대가 찍히는 사진관 주인.",
+        opening: "방금 맡긴 필름 말이에요. 이 등대, 제가 열 살 때 무너졌는데 어디서 찍으셨어요?",
+        looks: ["#638a97", "#292f37", "#526d7e", "short glasses"],
+        choices: [
+          ["사진 뒷면을 볼까요?", "잠깐, 주소가 있네요. 우리 사진관이에요. 번지까지 같아요."],
+          ["등대에 누가 있었어요?", "빨간 장화를 신은 아이요. 이상한 건 저도 그 장화를 아직 갖고 있다는 거예요."],
+          ["등대로 가 봐요.", "썰물까지 십 분 남았어요. 제 장화 하나 빌려 드릴게요. 짝짝이로 신죠."]
+        ],
+        ending: "물이 빠진 자리에 필름 한 통이 놓여 있었다. 라벨에는 두 사람의 오늘 날짜가 적혀 있었다."
+      },
+      {
+        id: "sori", name: "강소리", place: "전주 서학동", genre: "판타지",
+        bio: "끊어진 가야금 줄에서 남의 꿈을 듣는 악기 수리사.",
+        opening: "문을 살살 닫아 주세요. 이 줄에서 누가 자꾸 잠꼬대를 해서요.",
+        looks: ["#ad886c", "#47302f", "#799489", "long"],
+        choices: [
+          ["무슨 소리가 들려요?", "비 오는 날 기와 끝에서 물 떨어지는 소리요. 그런데 방금 제 이름을 불렀어요."],
+          ["한 번 켜 봐요.", "그럼 저쪽 끝을 잡아 주세요. 혼자 타면 꿈꾸는 사람만 들을 수 있거든요."],
+          ["줄을 고칠 수 있어요?", "고칠 순 있죠. 다만 이 꿈이 끝나기 전에 마지막 음부터 찾아야 해요."]
+        ],
+        ending: "마지막 음이 울리자 마당의 빗물이 멎었다. 소리는 수리 장부에 처음으로 두 사람의 이름을 함께 적었다."
+      },
+      {
+        id: "ian", name: "백이안", place: "서울 을지로", genre: "로맨스",
+        bio: "오래된 극장의 마지막 상영표를 두 장 간직한 영사기사.",
+        opening: "표 한 장 남겨 뒀어요. 영화는 이미 시작했는데, 제일 좋은 장면은 아직이에요.",
+        looks: ["#98757f", "#352d32", "#8d6959", "short"],
+        choices: [
+          ["무슨 영화예요?", "제목은 없어요. 동네 사람들이 올해 찍은 걸 제가 이어 붙였거든요."],
+          ["어디에 앉을까요?", "다섯째 줄 왼쪽이요. 거기 앉으면 영사실 창문에 제가 비쳐요."],
+          ["제일 좋은 장면이 뭔데요?", "지금이요. 화면 속의 작년 당신이 오늘 앉은 자리 쪽을 돌아봐요."]
+        ],
+        ending: "불이켜진 뒤에도 둘은 한동안 앉아 있었다. 화면 위로 이름 대신 동네 사람들의 손글씨가 흘렀다."
+      }
+    ];
+
+    const $ = selector => document.querySelector(selector);
+    const storageKey = "bampyeonji-market-v1";
+    let saved = {};
+
+    try {
+      saved = JSON.parse(localStorage.getItem(storageKey)) || {};
+    } catch {
+      saved = {};
+    }
+
+    const custom = Array.isArray(saved.custom) ? saved.custom.filter(c =>
+      c && typeof c.id === "string" && typeof c.name === "string" &&
+      typeof c.bio === "string" && typeof c.opening === "string" &&
+      Array.isArray(c.choices) && Array.isArray(c.looks)
+    ) : [];
+    const characters = [...cast, ...custom];
+    const favorites = new Set(Array.isArray(saved.favorites) ? saved.favorites : []);
+    const threads = new Map(Array.isArray(saved.threads) ? saved.threads.filter(entry =>
+      Array.isArray(entry) && entry.length === 2 && Array.isArray(entry[1])
+    ) : []);
+    let view = "market";
+    let genre = "전체";
+    let active = null;
+    let session = null;
+    let generation = 0;
+    let busy = false;
+    let storageAvailable = true;
+
+    function save() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({
+          custom, favorites: [...favorites], threads: [...threads]
+        }));
+      } catch {
+        storageAvailable = false;
+      }
+    }
+
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function portrait(character) {
+      const [sky, hair, coat, style] = character.looks;
+      const art = element("div", "portrait");
+      art.setAttribute("aria-hidden", "true");
+      art.style.setProperty("--sky", sky);
+      art.style.setProperty("--hair", hair);
+      art.style.setProperty("--coat", coat);
+      const figure = element("div", "figure " + style);
+      const face = element("div", "face");
+      face.append(element("span", "eyes"), element("span", "mouth"));
+      figure.append(element("div", "hair"), element("div", "shoulders"),
+        element("div", "neck"), face, element("div", "fringe"));
+      art.append(figure);
+      return art;
+    }
+
+    function characterCard(c) {
+      const card = element("article", "card");
+      const open = element("button", "card-open");
+      const copy = element("div", "card-copy");
+      copy.append(element("small", "", `${c.place} · ${c.genre}`),
+        element("h3", "", c.name), element("p", "", c.bio));
+      open.append(portrait(c), copy);
+      open.onclick = () => openChat(c);
+
+      const liked = favorites.has(c.id);
+      const heart = element("button", "heart", liked ? "♥" : "♡");
+      heart.setAttribute("aria-label", `${c.name} 찜`);
+      heart.setAttribute("aria-pressed", String(liked));
+      heart.onclick = () => {
+        if (favorites.has(c.id)) favorites.delete(c.id);
+        else favorites.add(c.id);
+        save();
+        if (view === "favorites") render();
+        else {
+          heart.textContent = favorites.has(c.id) ? "♥" : "♡";
+          heart.setAttribute("aria-pressed", String(favorites.has(c.id)));
+        }
+      };
+      card.append(open, heart);
+      return card;
+    }
+
+    function render() {
+      const titles = { market: "캐릭터 마켓", history: "이어보기", favorites: "찜한 캐릭터" };
+      $("#market-title").textContent = titles[view];
+      $("#feature").hidden = view !== "market";
+      document.querySelectorAll("[data-view]").forEach(button => {
+        button.setAttribute("aria-pressed", String(button.dataset.view === view));
+      });
+      document.querySelectorAll(".filter").forEach(button => {
+        button.setAttribute("aria-pressed", String(button.textContent === genre));
+      });
+
+      const query = $("#search").value.trim().toLocaleLowerCase();
+      let list = characters;
+      if (view === "favorites") list = list.filter(c => favorites.has(c.id));
+      if (view === "history") {
+        list = [...threads.keys()].reverse()
+          .map(id => characters.find(c => c.id === id)).filter(Boolean);
+      }
+      list = list.filter(c => (genre === "전체" || c.genre === genre) &&
+        `${c.name} ${c.place} ${c.genre} ${c.bio}`.toLocaleLowerCase().includes(query));
+
+      $("#grid").replaceChildren(...list.map(characterCard));
+      $("#empty").hidden = list.length > 0;
+      $("#empty").textContent = query || genre !== "전체" ? "조건에 맞는 캐릭터가 없어요."
+        : view === "history" ? "캐릭터를 만나면 여기서 대화를 이어갈 수 있어요."
+        : "캐릭터 카드의 하트를 눌러 여기에 모아 보세요.";
+    }
+
+    function selectView(next) {
+      view = next;
+      genre = "전체";
+      $("#search").value = "";
+      render();
+    }
+
+    for (const name of ["전체", "SF", "미스터리", "판타지", "로맨스"]) {
+      const button = element("button", "filter", name);
+      button.onclick = () => { genre = name; render(); };
+      $("#filters").append(button);
+    }
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.onclick = () => selectView(button.dataset.view);
+    });
+    $("#home").onclick = () => selectView("market");
+    $("#search").oninput = render;
+    $("#featured-chat").onclick = () => openChat(cast[0]);
+
+    function refreshChat() {
+      const history = threads.get(active.id);
+      const bubbles = history.map(item => {
+        const bubble = element("p", item.role === "user" ? "message mine" : "message", item.text);
+        bubble.setAttribute("aria-label", `${item.role === "user" ? "나" : active.name}: ${item.text}`);
+        return bubble;
+      });
+      $("#log").replaceChildren(...bubbles);
+      $("#log").scrollTop = $("#log").scrollHeight;
+      const used = new Set(history.map(item => item.choice).filter(Boolean));
+      const suggestions = active.choices.filter(([question]) => !used.has(question));
+      $("#prompts").replaceChildren(...suggestions.map(([question]) => {
+        const button = element("button", "", question);
+        button.disabled = busy;
+        button.onclick = () => send(question);
+        return button;
+      }));
+      $("#composer button").disabled = busy;
+      const mode = session ? "기기 내 AI 채팅" : "대본형 채팅";
+      $("#mode").textContent = busy ? "답장을 쓰고 있어요…"
+        : `${mode} · ${storageAvailable ? "이 브라우저에 대화가 저장됩니다." : "현재 탭에서만 대화가 유지됩니다."}`;
+    }
+
+    async function openChat(c) {
+      active = c;
+      busy = false;
+      const ticket = ++generation;
+      const history = threads.get(c.id) || [{ role: "assistant", text: c.opening }];
+      threads.delete(c.id);
+      threads.set(c.id, history);
+      save();
+      $("#setting").textContent = `${c.place} · ${c.genre}`;
+      $("#chat-name").textContent = c.name;
+      $("#message").value = "";
+      $("#chat").showModal();
+      refreshChat();
+      $("#message").focus();
+
+      // Local mode remains playable in browsers without an installed model.
+      try {
+        const model = globalThis.LanguageModel;
+        if (!model) return;
+        const options = {
+          expectedInputs: [{ type: "text", languages: ["ko"] }],
+          expectedOutputs: [{ type: "text", languages: ["ko"] }]
+        };
+        if (await model.availability(options) !== "available" || ticket !== generation) return;
+        const created = await model.create({
+          ...options,
+          initialPrompts: [{
+            role: "system",
+            content: `한국 단편 드라마의 가상 인물 ${c.name}을 연기하세요. 배경은 ${c.place}입니다. 설정: ${c.bio} 한국어로 자연스럽게 한두 문장씩 답하고 상대방의 행동은 대신 결정하지 마세요.`
+          }]
+        });
+        if (ticket !== generation) created.destroy();
+        else { session = created; refreshChat(); }
+      } catch {
+        // The authored story stays available when local inference is unavailable.
+      }
+    }
+
+    function scriptedReply(c, text, history) {
+      const choice = c.choices.find(([question]) => question === text);
+      if (choice) return { text: choice[1], choice: choice[0] };
+      const used = new Set(history.map(item => item.choice).filter(Boolean));
+      const next = c.choices.find(([question]) => !used.has(question));
+      if (next) return { text: next[1], choice: next[0] };
+      if (!history.some(item => item.ending)) return { text: c.ending, ending: true };
+      return { text: "이 단편의 마지막 장면입니다. 다른 인물의 이야기는 캐릭터 마켓에서 열어 보세요." };
+    }
+
+    async function send(raw) {
+      const text = raw.trim().slice(0, 600);
+      if (!text || busy || !active) return;
+      const c = active;
+      const history = threads.get(c.id);
+      const ticket = generation;
+      const engine = session;
+      const userLine = { role: "user", text };
+      history.push(userLine);
+      $("#message").value = "";
+      busy = true;
+      save();
+      refreshChat();
+
+      let reply;
+      if (engine) {
+        try {
+          const transcript = history.slice(-14).map(line =>
+            `${line.role === "user" ? "상대" : c.name}: ${line.text}`
+          ).join("\n");
+          const answer = await engine.prompt(`장면의 최근 대화입니다.\n${transcript}\n${c.name}의 다음 대사만 작성하세요.`);
+          if (!answer.trim()) throw new Error("Empty response");
+          reply = { text: answer.trim(), choice: c.choices.find(([q]) => q === text)?.[0] };
+        } catch {
+          if (ticket === generation) { session?.destroy(); session = null; }
+        }
+      }
+      if (ticket !== generation) return;
+      reply ||= scriptedReply(c, text, history);
+      history.push({ role: "assistant", ...reply });
+      busy = false;
+      save();
+      refreshChat();
+      $("#message").focus();
+    }
+
+    $("#composer").onsubmit = event => {
+      event.preventDefault();
+      send($("#message").value);
+    };
+
+    $("#chat").addEventListener("close", () => {
+      generation++;
+      if (busy && active) {
+        const history = threads.get(active.id);
+        const last = history.at(-1);
+        if (last?.role === "user") {
+          history.push({ role: "assistant", ...scriptedReply(active, last.text, history) });
+          save();
+        }
+      }
+      session?.destroy();
+      session = null;
+      busy = false;
+      active = null;
+      render();
+    });
+
+    $("#create").onclick = () => $("#studio").showModal();
+    $("#creator").onsubmit = event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const values = Object.fromEntries(new FormData(form));
+      for (const key of Object.keys(values)) {
+        values[key] = values[key].trim();
+        if (!values[key]) { form.elements[key].focus(); return; }
+      }
+      const c = {
+        id: "original-" + crypto.randomUUID(),
+        name: values.name, place: values.place, genre: values.genre,
+        bio: values.bio, opening: values.opening,
+        looks: [...cast[custom.length % cast.length].looks],
+        choices: [
+          ["여기는 어디예요?", `${values.place}예요. ${values.bio}`],
+          ["숨기고 있는 게 있나요?", values.secret]
+        ],
+        ending: `${values.name}은 잠시 말을 멈췄다. ${values.place}에서 두 사람의 첫 이야기가 그렇게 끝났다.`
+      };
+      custom.push(c);
+      characters.unshift(c);
+      save();
+      form.reset();
+      $("#studio").close();
+      selectView("market");
+      openChat(c);
+    };
+
+    render();
+  </script>
+</body>
+</html>
