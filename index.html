@@ -385,10 +385,24 @@
       font-size: 14.5px;
     }
 
+    .comments-section {
+      margin-top: 56px;
+      padding: 34px;
+      border-radius: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+    .giscus-frame-wrap {
+      min-height: 280px;
+      margin-top: 20px;
+    }
+
     @media (max-width: 768px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
       .studio-grid { grid-template-columns: 1fr; }
       .site-footer { flex-direction: column; align-items: flex-start; }
+      .comments-section { padding: 22px 18px; }
     }
     @media (max-width: 540px) {
       header { flex-direction: column; align-items: flex-start; gap: 14px; }
@@ -412,6 +426,7 @@
         <button data-view="history" aria-pressed="false">이어보기</button>
         <button data-view="favorites" aria-pressed="false">찜한 캐릭터</button>
         <button id="create">＋ 캐릭터 만들기</button>
+        <button id="guestbook-nav">🌙 방명록</button>
         <button id="inquiry-btn">🤝 제휴 문의</button>
         <button class="theme-toggle" id="theme-btn" aria-label="테마 변경">☀️</button>
       </nav>
@@ -435,6 +450,19 @@
         <div class="filters" id="filters" aria-label="장르 필터"></div>
         <div class="grid" id="grid"></div>
         <p class="muted" id="empty" hidden></p>
+      </section>
+
+      <!-- Giscus Guestbook Comments Section -->
+      <section class="comments-section" id="guestbook" aria-labelledby="guestbook-title">
+        <div class="section-head" style="margin-top: 0; margin-bottom: 20px;">
+          <div>
+            <h2 id="guestbook-title">🌙 달빛 방명록</h2>
+            <small style="color:var(--muted); font-size:14px; margin-top:6px; display:inline-block;">밤편지 속 캐릭터들에게 전하고 싶은 이야기나 독자 소감을 자유롭게 남겨보세요.</small>
+          </div>
+        </div>
+        <div class="giscus-frame-wrap">
+          <div class="giscus"></div>
+        </div>
       </section>
 
       <footer class="site-footer">
@@ -691,10 +719,22 @@
     let currentTheme = saved.theme || "dark";
     document.documentElement.setAttribute("data-theme", currentTheme);
     $("#theme-btn").textContent = currentTheme === "dark" ? "☀️" : "🌙";
+
+    function updateGiscusTheme(theme) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      if (!iframe) return;
+      const giscusTheme = theme === "dark" ? "noborder_dark" : "noborder_light";
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme } } },
+        "https://giscus.app"
+      );
+    }
+
     $("#theme-btn").onclick = () => {
       currentTheme = currentTheme === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", currentTheme);
       $("#theme-btn").textContent = currentTheme === "dark" ? "☀️" : "🌙";
+      updateGiscusTheme(currentTheme);
       save();
     };
 
@@ -1253,7 +1293,36 @@
       }
     };
 
+    // =========================================================
+    // Giscus Guestbook Integration & Theme Sync
+    // =========================================================
+    $("#guestbook-nav").onclick = () => {
+      $("#guestbook").scrollIntoView({ behavior: "smooth" });
+    };
+
+    function initGiscus() {
+      const wrap = document.querySelector(".giscus-frame-wrap");
+      if (!wrap) return;
+      const script = document.createElement("script");
+      script.src = "https://giscus.app/client.js";
+      script.dataset.repo = "laepark/product-builder-lecture";
+      script.dataset.repoId = "R_kgDOV232-Q";
+      script.dataset.category = "General";
+      script.dataset.categoryId = "DIC_kwDOV232-c4DLuhr";
+      script.dataset.mapping = "pathname";
+      script.dataset.strict = "0";
+      script.dataset.reactionsEnabled = "1";
+      script.dataset.emitMetadata = "0";
+      script.dataset.inputPosition = "bottom";
+      script.dataset.theme = currentTheme === "dark" ? "noborder_dark" : "noborder_light";
+      script.dataset.lang = "ko";
+      script.crossOrigin = "anonymous";
+      script.async = true;
+      wrap.appendChild(script);
+    }
+
     render();
+    initGiscus();
   </script>
 </body>
 </html>
