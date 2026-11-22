@@ -1,27 +1,52 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171625">
+  <meta name="theme-color" content="#151322">
   <title>밤편지 | 한국 캐릭터 마켓</title>
   <style>
-    :root {
+    :root[data-theme="dark"] {
       color-scheme: dark;
-      --bg: #171625;
-      --panel: #222132;
-      --line: #403c50;
-      --text: #f8f2eb;
-      --muted: #c0b8c8;
-      --peach: #ffc3aa;
+      --bg: #151322;
+      --panel: #1e1b2f;
+      --panel-hover: #26223b;
+      --line: #37334e;
+      --text: #f6f0ea;
+      --muted: #a69bb3;
+      --peach: #ffb79e;
+      --peach-tint: #ffb79e22;
+      --hero-grad: linear-gradient(115deg, #2a1f3d, #4d365a 60%, #875468);
+      --dialog-bg: #1c182b;
+      --mine-bubble: #5c384a;
+      --bubble: #2d2840;
+      --star-color: #fff8e7;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f9f5ef;
+      --panel: #ffffff;
+      --panel-hover: #fdfaf6;
+      --line: #e5dacd;
+      --text: #2c2532;
+      --muted: #7d7285;
+      --peach: #d96245;
+      --peach-tint: #d9624518;
+      --hero-grad: linear-gradient(115deg, #ebd9cf, #d8bfd8 55%, #c2a6bf);
+      --dialog-bg: #fffbf6;
+      --mine-bubble: #eed4d0;
+      --bubble: #f0e8e0;
+      --star-color: #7d5b8c;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
       word-break: keep-all;
+      transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
     }
     button, input, select, textarea { font: inherit; }
     button { cursor: pointer; }
@@ -29,137 +54,340 @@
       color: inherit;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 14px;
+      transition: all 0.2s ease;
     }
     button:hover { border-color: var(--peach); }
     :focus-visible { outline: 3px solid var(--peach); outline-offset: 3px; }
     [hidden] { display: none !important; }
-    .shell { width: min(1150px, 92%); margin: auto; }
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line);
+
+    /* Canvas Sky Background */
+    #sky-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
     }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, 92%);
+      margin: auto;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-wrap { display: flex; align-items: center; gap: 14px; }
     .brand {
       background: none; border: 0; padding: 0; color: var(--peach);
-      font: 700 30px Georgia, "Batang", serif; letter-spacing: -.09em;
+      font: 700 32px Georgia, "Batang", serif; letter-spacing: -.09em;
+      display: flex; align-items: center; gap: 8px;
     }
-    nav, .filters, .actions, .prompts { display: flex; flex-wrap: wrap; gap: 8px; }
-    nav button, .filter { background: transparent; }
+    .brand-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: var(--peach-tint);
+      color: var(--peach);
+      border: 1px solid var(--peach);
+      font-weight: 600;
+    }
+    nav, .filters, .actions, .prompts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    nav button, .filter, .icon-btn { background: transparent; }
     button[aria-pressed="true"], .primary {
-      background: var(--peach); color: #321f29; border-color: var(--peach);
+      background: var(--peach); color: #fff; border-color: var(--peach); font-weight: 600;
     }
-    main { padding: 28px 0 58px; }
+    :root[data-theme="dark"] button[aria-pressed="true"], :root[data-theme="dark"] .primary {
+      color: #2b1720;
+    }
+    .theme-toggle {
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      padding: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    main { padding: 32px 0 64px; }
     .feature {
       position: relative; isolation: isolate; overflow: hidden;
-      background: linear-gradient(110deg, #392d4e, #5d496c 64%, #a47480);
-      border-radius: 20px; padding: clamp(24px, 5vw, 60px);
-      min-height: 285px; display: flex; align-items: center;
+      background: var(--hero-grad);
+      border-radius: 24px; padding: clamp(28px, 5vw, 64px);
+      min-height: 290px; display: flex; align-items: center;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
     }
     .feature-copy { position: relative; z-index: 1; max-width: 65%; }
     .feature::before {
-      content: ""; position: absolute; width: 150px; height: 150px;
-      border-radius: 50%; right: 8%; top: 20px; background: #ffe0bb;
-      box-shadow: 0 0 70px #ffdac347;
+      content: ""; position: absolute; width: 160px; height: 160px;
+      border-radius: 50%; right: 7%; top: 24px;
+      background: radial-gradient(circle, #fff3db, #ffd2b3 70%, transparent);
+      box-shadow: 0 0 80px #ffdac366;
     }
     .feature::after {
-      content: ""; position: absolute; inset: 45% 0 0 48%; z-index: -1;
-      background: #332d48;
+      content: ""; position: absolute; inset: 45% 0 0 46%; z-index: -1;
+      background: #2b223c;
+      opacity: 0.6;
       clip-path: polygon(0 100%,0 74%,8% 74%,8% 50%,16% 50%,16% 65%,25% 65%,25% 22%,34% 22%,34% 63%,44% 63%,44% 39%,52% 39%,52% 58%,61% 58%,61% 10%,62% 0,63% 10%,63% 58%,74% 58%,74% 35%,83% 35%,83% 54%,92% 54%,92% 20%,100% 20%,100% 100%);
     }
-    .feature small { color: #ffe0c5; }
-    h1 { font: 600 clamp(32px, 5vw, 60px)/1.12 Georgia, "Batang", serif; margin: 12px 0; letter-spacing: -.08em; }
-    .feature p { margin: 0 0 20px; line-height: 1.65; }
-    h2 { margin: 0; font-size: 26px; letter-spacing: -.06em; }
+    .feature small { color: var(--peach); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+    h1 { font: 600 clamp(32px, 5vw, 56px)/1.15 Georgia, "Batang", serif; margin: 12px 0; letter-spacing: -.07em; }
+    .feature p { margin: 0 0 22px; line-height: 1.7; font-size: 1.05rem; }
+    h2 { margin: 0; font-size: 26px; letter-spacing: -.05em; }
+
     .section-head {
       display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px; margin: 30px 0 16px;
+      flex-wrap: wrap; gap: 14px; margin: 34px 0 18px;
     }
-    #search { width: min(340px, 100%); }
-    .filter { border-radius: 30px; padding: 7px 14px; font-size: 14px; }
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
-    .card { position: relative; min-width: 0; border: 1px solid var(--line); border-radius: 15px; overflow: hidden; background: var(--panel); }
+    #search { width: min(340px, 100%); border-radius: 30px; }
+    .filter { border-radius: 30px; padding: 8px 16px; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+    .card {
+      position: relative; min-width: 0; border: 1px solid var(--line);
+      border-radius: 20px; overflow: hidden; background: var(--panel);
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0,0,0,0.15); border-color: var(--peach); }
     .card-open { display: block; width: 100%; padding: 0; border: none; background: none; text-align: left; }
     .card-open:focus-visible { outline-offset: -4px; }
-    .card-copy { padding: 17px; }
+    .card-copy { padding: 18px 20px; }
     .card-copy small, .muted, .note { color: var(--muted); }
-    .card-copy h3 { margin: 5px 0; font-size: 23px; }
+    .card-tags { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .card-copy h3 { margin: 4px 0 8px; font-size: 22px; letter-spacing: -0.04em; }
     .card-copy p { margin: 0; font-size: 14px; line-height: 1.6; }
-    .heart { position: absolute; right: 10px; top: 10px; border: 0; border-radius: 50%; background: #201b2bcc; color: white; width: 38px; height: 38px; padding: 0; font-size: 22px; }
-    .heart[aria-pressed="true"] { background: #4c2734; color: #ffb4af; }
+    .heart {
+      position: absolute; right: 12px; top: 12px; border: 0; border-radius: 50%;
+      background: rgba(20, 16, 30, 0.65); backdrop-filter: blur(8px);
+      color: white; width: 40px; height: 40px; padding: 0; font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .heart:hover { transform: scale(1.15); }
+    .heart[aria-pressed="true"] { background: #5c202e; color: #ff9ca8; }
 
-    /* 각 이야기의 색과 의상을 사용하는 오리지널 캐릭터 초상화 */
+    /* =========================================================
+       ANIME-VIBES VECTOR PORTRAITS
+       Stylized anime lashes, dual-highlight glassy eyes, blush, anime halo
+       ========================================================= */
     .portrait {
-      --hair: #312a36; --coat: #aa7382; --sky: #9f829e;
-      position: relative; isolation: isolate; height: 176px; overflow: hidden;
-      background: radial-gradient(circle at 76% 25%, #ffe6c2 0 16px, transparent 17px),
-                  linear-gradient(155deg, var(--sky), #49435f);
+      --hair: #2c2538; --coat: #b86f84; --sky: #95789f;
+      position: relative; isolation: isolate; height: 186px; overflow: hidden;
+      background: radial-gradient(circle at 74% 24%, #fff5db 0 18px, transparent 19px),
+                  linear-gradient(155deg, var(--sky), #362e49);
     }
     .portrait::before {
-      content: ""; position: absolute; inset: 55% -6px -5px;
-      background: repeating-linear-gradient(90deg, #272a4166 0 22px, transparent 22px 32px);
+      content: ""; position: absolute; inset: 55% -10px -5px;
+      background: repeating-linear-gradient(90deg, rgba(30, 25, 45, 0.35) 0 24px, transparent 24px 36px);
       transform: skewY(-7deg);
     }
-    .figure { position: absolute; left: 50%; bottom: -10px; width: 130px; height: 160px; transform: translateX(-50%); }
-    .shoulders { position: absolute; bottom: -22px; left: 4px; width: 124px; height: 82px; border-radius: 56% 56% 0 0; background: var(--coat); }
-    .neck { position: absolute; top: 91px; left: 55px; width: 21px; height: 25px; border-radius: 0 0 9px 9px; background: #e4ad94; }
-    .hair { position: absolute; top: 7px; left: 25px; width: 81px; height: 102px; border-radius: 48% 50% 18% 26%; background: var(--hair); }
-    .face { position: absolute; top: 25px; left: 36px; width: 62px; height: 77px; border-radius: 46% 45% 49% 48%; background: linear-gradient(110deg,#edb79c,#ffe1c7); }
-    .fringe { position: absolute; inset: 9px 23px auto 26px; height: 58px; background: var(--hair); clip-path: polygon(0 100%,0 36%,16% 9%,46% 0,76% 5%,97% 30%,100% 77%,77% 55%,81% 71%,57% 42%,37% 75%,41% 52%,19% 87%); }
-    .eyes { position: absolute; top: 36px; left: 12px; width: 9px; height: 5px; border-radius: 50%; background: #352a38; box-shadow: 29px 0 #352a38; }
-    .mouth { position: absolute; top: 57px; left: 27px; width: 10px; height: 4px; border-bottom: 2px solid #b97774; border-radius: 50%; }
-    .short .hair { height: 79px; }
-    .long .hair { height: 145px; width: 91px; left: 21px; }
-    .long .fringe { transform: scaleX(-1); }
-    .glasses .eyes::before {
-      content: ""; position: absolute; left: -4px; top: -5px; width: 15px; height: 12px;
-      border: 1px solid #4e4651; border-radius: 45%; box-shadow: 29px 0 0 -1px #f5d7be, 29px 0 #4e4651;
+    .figure {
+      position: absolute; left: 50%; bottom: -12px; width: 140px; height: 175px;
+      transform: translateX(-50%);
     }
-    .glasses .eyes::after { content: ""; position: absolute; top: 0; left: 29px; width: 8px; height: 5px; border-radius: 50%; background: #352a38; }
+    .shoulders {
+      position: absolute; bottom: -20px; left: 8px; width: 124px; height: 86px;
+      border-radius: 58% 58% 0 0; background: var(--coat);
+      box-shadow: inset 0 6px 12px rgba(255,255,255,0.18);
+    }
+    .collar {
+      position: absolute; bottom: 42px; left: 52px; width: 36px; height: 22px;
+      border-bottom: 3px solid rgba(255,255,255,0.4);
+      border-radius: 0 0 18px 18px;
+    }
+    .neck {
+      position: absolute; top: 96px; left: 60px; width: 20px; height: 24px;
+      border-radius: 0 0 10px 10px; background: #e8b19a;
+    }
+    .hair {
+      position: absolute; top: 12px; left: 28px; width: 84px; height: 104px;
+      border-radius: 50% 50% 22% 26%; background: var(--hair);
+    }
+    .hair-halo {
+      position: absolute; top: 32px; left: 34px; width: 72px; height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4) 45%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.4) 55%, transparent);
+      transform: rotate(-10deg);
+      pointer-events: none;
+    }
+    .face {
+      position: absolute; top: 32px; left: 40px; width: 60px; height: 74px;
+      border-radius: 46% 46% 50% 50%;
+      background: linear-gradient(115deg, #f7c3aa, #ffe6d1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+    /* Anime Cheeks / Blush */
+    .blush {
+      position: absolute; top: 48px; left: 8px; width: 12px; height: 6px;
+      border-radius: 50%; background: #ff788a44;
+      box-shadow: 32px 0 #ff788a44;
+    }
+    .fringe {
+      position: absolute; inset: 12px 24px auto 26px; height: 56px;
+      background: var(--hair);
+      clip-path: polygon(0 100%, 0 32%, 18% 8%, 50% 0, 80% 6%, 98% 30%, 100% 75%, 82% 52%, 84% 72%, 60% 40%, 42% 74%, 43% 50%, 20% 86%);
+    }
+    /* Anime Eyes: Big, glowing iris, twin reflection highlights */
+    .anime-eyes {
+      position: absolute; top: 34px; left: 10px; width: 12px; height: 15px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 45% 65%, #ff9fa8 0%, #34243b 65%);
+      box-shadow: 28px 0 #34243b;
+    }
+    .anime-eyes::before {
+      /* Big specular spark */
+      content: ""; position: absolute; top: 2px; left: 2px; width: 5px; height: 5px;
+      border-radius: 50%; background: #ffffff;
+      box-shadow: 28px 0 #ffffff;
+    }
+    .anime-eyes::after {
+      /* Tiny secondary highlight */
+      content: ""; position: absolute; bottom: 3px; right: 2px; width: 2.5px; height: 2.5px;
+      border-radius: 50%; background: #ffffffcc;
+      box-shadow: 28px 0 #ffffffcc;
+    }
+    .anime-lash {
+      position: absolute; top: 30px; left: 9px; width: 15px; height: 3px;
+      border-top: 2.5px solid #231b26; border-radius: 50% 50% 0 0;
+      box-shadow: 28px 0 0 -0.5px #231b26;
+    }
+    .mouth {
+      position: absolute; top: 56px; left: 26px; width: 8px; height: 4px;
+      border-bottom: 2px solid #b36365; border-radius: 50%;
+    }
 
-    dialog {
-      color: var(--text); background: #211f30; border: 1px solid var(--line);
-      border-radius: 18px; padding: 0; width: min(540px, 94vw); max-height: 90dvh;
+    /* Hairstyle variations */
+    .short .hair { height: 80px; }
+    .long .hair { height: 148px; width: 94px; left: 23px; }
+    .wavy .hair {
+      height: 150px; width: 102px; left: 19px;
+      border-radius: 46% 46% 38% 38%;
+      box-shadow: -6px 12px 0 -2px var(--hair), 6px 12px 0 -2px var(--hair);
     }
-    dialog::backdrop { background: #090713bc; }
-    .dialog-head, .composer { display: flex; align-items: center; gap: 10px; padding: 15px; }
-    .dialog-head { justify-content: space-between; border-bottom: 1px solid var(--line); }
-    .dialog-head h2 { font-size: 21px; }
+    .long .fringe { transform: scaleX(-1); }
+    .glasses .anime-eyes::before {
+      /* Glasses frame */
+      box-shadow: 28px 0 #ffffff,
+                  -5px -4px 0 2px rgba(255,255,255,0.1),
+                  -5px -4px 0 3px #ffb39e,
+                  23px -4px 0 3px #ffb39e;
+    }
+
+    /* Dialogs */
+    dialog {
+      color: var(--text); background: var(--dialog-bg);
+      border: 1px solid var(--line);
+      border-radius: 22px; padding: 0; width: min(600px, 94vw); max-height: 90dvh;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    }
+    dialog::backdrop { background: rgba(8, 6, 16, 0.7); backdrop-filter: blur(8px); }
+    .dialog-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--line);
+    }
+    .dialog-head h2 { font-size: 22px; margin: 0; }
     .dialog-head small { color: var(--muted); }
-    #log { height: min(42dvh, 380px); overflow-y: auto; padding: 16px; }
-    .message { width: fit-content; max-width: 89%; margin: 7px 0; padding: 11px 14px; border-radius: 13px; background: #343045; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
-    .mine { margin-left: auto; background: #624554; }
-    .prompts { padding: 0 15px; }
-    .prompts button { padding: 7px 10px; font-size: 13px; }
-    .composer input { min-width: 0; flex: 1; }
-    .note { margin: 0; padding: 0 15px 15px; font-size: 12px; line-height: 1.6; }
-    .workshop { padding: 16px; display: grid; gap: 12px; }
-    label { display: grid; gap: 5px; }
-    textarea { resize: vertical; min-height: 65px; }
-    @media (max-width: 760px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    .dialog-actions { display: flex; align-items: center; gap: 8px; }
+
+    /* Story Selector Tabs in Chat */
+    .story-select-bar {
+      display: flex; gap: 6px; overflow-x: auto; padding: 10px 18px;
+      background: var(--panel); border-bottom: 1px solid var(--line);
+    }
+    .story-tab {
+      padding: 6px 12px; font-size: 13px; border-radius: 20px; white-space: nowrap;
+      background: transparent; border: 1px solid var(--line);
+    }
+    .story-tab[aria-selected="true"] {
+      background: var(--peach-tint); border-color: var(--peach); color: var(--peach); font-weight: 600;
+    }
+
+    #log { height: min(40dvh, 360px); overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+    .bubble-row { display: flex; align-items: flex-start; gap: 8px; max-width: 88%; }
+    .bubble-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+    .message {
+      margin: 0; padding: 12px 16px; border-radius: 16px;
+      background: var(--bubble); line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+    }
+    .mine .message { background: var(--mine-bubble); }
+    .speak-btn {
+      background: transparent; border: 0; padding: 4px; font-size: 16px; opacity: 0.6;
+      border-radius: 50%; align-self: center;
+    }
+    .speak-btn:hover { opacity: 1; border-color: transparent; }
+
+    .prompts { padding: 8px 18px; }
+    .prompts button { padding: 8px 14px; font-size: 13.5px; border-radius: 20px; }
+    .composer { display: flex; align-items: center; gap: 10px; padding: 14px 18px; }
+    .composer input { min-width: 0; flex: 1; border-radius: 24px; }
+    .dialog-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 18px 14px; font-size: 12.5px;
+    }
+
+    /* Keepsake Letter Postcard Modal */
+    #letter-dialog { width: min(540px, 92vw); }
+    .letter-card {
+      margin: 20px; padding: 28px; border-radius: 16px;
+      background: #fbf6ec; color: #2d2427;
+      border: 1px solid #d8caa7;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      font-family: "Batang", "Song Myung", serif;
+      position: relative;
+    }
+    .letter-stamp {
+      position: absolute; right: 24px; top: 24px; width: 62px; height: 72px;
+      border: 2px dashed #9d5058; border-radius: 4px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #9d5058; font-size: 11px; font-weight: bold; transform: rotate(5deg);
+    }
+    .letter-content { line-height: 1.9; font-size: 15px; margin: 24px 0; min-height: 120px; }
+    .letter-signature { text-align: right; font-style: italic; color: #694f57; }
+
+    /* Studio Creator Live Preview */
+    .studio-grid { display: grid; grid-template-columns: 180px 1fr; gap: 20px; padding: 18px; }
+    .preview-box { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .color-row { display: flex; gap: 8px; align-items: center; }
+    .color-row input[type="color"] { width: 36px; height: 36px; padding: 2px; border-radius: 50%; cursor: pointer; }
+    .workshop { display: grid; gap: 12px; }
+    label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 500; }
+    textarea { resize: vertical; min-height: 60px; }
+
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .studio-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 540px) {
-      header { align-items: flex-start; flex-direction: column; gap: 10px; }
-      nav button { padding: 7px 10px; font-size: 13px; }
-      .feature-copy { max-width: 80%; }
-      .feature::before { width: 75px; height: 75px; right: 5%; }
-      .grid { gap: 10px; }
-      .portrait { height: 140px; }
-      .figure { transform: translateX(-50%) scale(.85); transform-origin: bottom; }
-      .card-copy { padding: 11px; }
-      .card-copy h3 { font-size: 19px; }
-      .card-copy p { font-size: 13px; }
+      header { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .grid { grid-template-columns: 1fr; }
+      .feature-copy { max-width: 100%; }
+      .feature::before { width: 90px; height: 90px; right: 4%; }
     }
   </style>
 </head>
 <body>
+  <!-- Interactive Dynamic Starfall Canvas -->
+  <canvas id="sky-canvas"></canvas>
+
   <div class="shell">
     <header>
-      <button class="brand" id="home">밤편지</button>
+      <div class="brand-wrap">
+        <button class="brand" id="home">밤편지 <span class="brand-tag">Ver 2.0</span></button>
+      </div>
       <nav aria-label="주요 메뉴">
         <button data-view="market" aria-pressed="true">캐릭터 마켓</button>
         <button data-view="history" aria-pressed="false">이어보기</button>
         <button data-view="favorites" aria-pressed="false">찜한 캐릭터</button>
         <button id="create">＋ 캐릭터 만들기</button>
+        <button class="theme-toggle" id="theme-btn" aria-label="테마 변경">☀️</button>
       </nav>
     </header>
 
@@ -168,10 +396,11 @@
         <div class="feature-copy">
           <small>이달의 단편 · 서울 SF</small>
           <h1>별이 내리는 정류장</h1>
-          <p>성북동 막차가 떠난 뒤, 유나의 교통카드에 내일 날짜의 승차 기록이 찍혔다.</p>
+          <p>성북동 막차가 떠난 밤, 유나의 교통카드에 내일 날짜의 승차 기록이 찍혔다.</p>
           <button class="primary" id="featured-chat">유나와 첫 장면 열기 →</button>
         </div>
       </section>
+
       <section aria-labelledby="market-title">
         <div class="section-head">
           <h2 id="market-title">캐릭터 마켓</h2>
@@ -184,127 +413,238 @@
     </main>
   </div>
 
+  <!-- Chat Dialog with Multi-Episode Selection, Web Audio SFX & Voice TTS -->
   <dialog id="chat" aria-labelledby="chat-name">
     <div class="dialog-head">
-      <div><small id="setting"></small><h2 id="chat-name"></h2></div>
-      <form method="dialog"><button aria-label="대화 닫기">닫기</button></form>
+      <div>
+        <small id="setting"></small>
+        <h2 id="chat-name"></h2>
+      </div>
+      <div class="dialog-actions">
+        <button id="sound-btn" class="icon-btn" title="음향 효과 켜기/끄기">🔊</button>
+        <button id="letter-btn" class="icon-btn" title="편지로 간직하기">💌</button>
+        <form method="dialog"><button aria-label="대화 닫기">✕</button></form>
+      </div>
     </div>
+
+    <!-- Episode Story Tabs -->
+    <div class="story-select-bar" id="story-tabs"></div>
+
     <div id="log" role="log" aria-label="대화 내용"></div>
     <div class="prompts" id="prompts" aria-label="추천 대사"></div>
     <form class="composer" id="composer">
       <input id="message" maxlength="600" autocomplete="off" aria-label="보낼 대사" placeholder="대사를 입력하세요">
       <button class="primary">보내기</button>
     </form>
-    <p class="note" id="mode">대본형 채팅 · 대화는 이 브라우저에 저장됩니다.</p>
+    <div class="dialog-foot">
+      <span class="note" id="mode">대본형 채팅 · 자동 저장됨</span>
+      <button type="button" id="export-txt" class="icon-btn" style="font-size: 12px; padding: 4px 8px;">대화 복사</button>
+    </div>
   </dialog>
 
+  <!-- Keepsake Postcard Dialog -->
+  <dialog id="letter-dialog">
+    <div class="dialog-head">
+      <h2>밤편지 보관함</h2>
+      <form method="dialog"><button>✕</button></form>
+    </div>
+    <div class="letter-card" id="letter-card">
+      <div class="letter-stamp">밤편지<br>우표</div>
+      <h3 id="letter-title" style="margin-top:0;">서유나로부터 온 편지</h3>
+      <p id="letter-date" style="font-size:12px; color:#8d797e;"></p>
+      <div class="letter-content" id="letter-body"></div>
+      <div class="letter-signature" id="letter-sign"></div>
+    </div>
+    <div style="padding: 16px 20px; display:flex; justify-content:flex-end; gap:8px;">
+      <button class="primary" id="copy-letter-btn">편지 복사하기</button>
+    </div>
+  </dialog>
+
+  <!-- Studio: Character Creator with Live Anime Avatar Preview -->
   <dialog id="studio" aria-labelledby="studio-title">
     <div class="dialog-head">
-      <h2 id="studio-title">내 캐릭터 만들기</h2>
-      <form method="dialog"><button aria-label="작업실 닫기">닫기</button></form>
+      <h2 id="studio-title">내 캐릭터 만들기 (애니메이션 스튜디오)</h2>
+      <form method="dialog"><button aria-label="작업실 닫기">✕</button></form>
     </div>
-    <form class="workshop" id="creator">
-      <label>이름<input name="name" maxlength="18" required placeholder="예: 한이솔"></label>
-      <label>배경 장소<input name="place" maxlength="30" required placeholder="예: 여수의 심야 우체국"></label>
-      <label>장르<select name="genre"><option>판타지</option><option>로맨스</option><option>미스터리</option><option>SF</option></select></label>
-      <label>이야기 소개<textarea name="bio" maxlength="180" required placeholder="이곳에선 부치지 못한 편지만 배달된다."></textarea></label>
-      <label>캐릭터의 첫 대사<textarea name="opening" maxlength="300" required placeholder="이 편지, 십 년 전의 당신이 보낸 건데요."></textarea></label>
-      <label>숨겨 둔 비밀<textarea name="secret" maxlength="300" required placeholder="사실 이 우체국의 마지막 수신인은 저예요."></textarea></label>
-      <button class="primary">내 마켓에 저장하기</button>
-    </form>
+    <div class="studio-grid">
+      <div class="preview-box">
+        <div id="preview-avatar"></div>
+        <div class="color-row">
+          <label style="font-size:11px;">머리색<input type="color" id="picker-hair" value="#362942"></label>
+          <label style="font-size:11px;">의상색<input type="color" id="picker-coat" value="#b86f84"></label>
+          <label style="font-size:11px;">하늘색<input type="color" id="picker-sky" value="#95789f"></label>
+        </div>
+        <label style="width: 100%;">
+          헤어 스타일
+          <select id="picker-style">
+            <option value="long">긴 생머리</option>
+            <option value="short">쇼트 보브</option>
+            <option value="wavy">웨이브</option>
+            <option value="short glasses">안경 스타일</option>
+          </select>
+        </label>
+      </div>
+
+      <form class="workshop" id="creator">
+        <label>이름<input name="name" maxlength="18" required placeholder="예: 한이솔"></label>
+        <label>배경 장소<input name="place" maxlength="30" required placeholder="예: 여수의 심야 우체국"></label>
+        <label>장르<select name="genre"><option>판타지</option><option>로맨스</option><option>미스터리</option><option>SF</option></select></label>
+        <label>이야기 소개<textarea name="bio" maxlength="180" required placeholder="이곳에선 부치지 못한 편지만 배달된다."></textarea></label>
+        <label>캐릭터의 첫 대사<textarea name="opening" maxlength="300" required placeholder="이 편지, 십 년 전의 당신이 보낸 건데요."></textarea></label>
+        <label>숨겨 둔 비밀<textarea name="secret" maxlength="300" required placeholder="사실 이 우체국의 마지막 수신인은 저예요."></textarea></label>
+        <button class="primary" style="margin-top: 8px;">내 마켓에 등록하기</button>
+      </form>
+    </div>
   </dialog>
 
   <script>
-    // Standalone Korean adaptation of a character market, history, and workshop.
-    // The default engine uses authored dialogue. Compatible browsers can use
-    // their local Prompt API when a Korean-capable model is already available.
+    // =========================================================
+    // Multi-Episode Characters with Ambient Sounds & Stories
+    // =========================================================
     const cast = [
       {
         id: "yuna", name: "서유나", place: "서울 성북동", genre: "SF",
         bio: "막차를 놓친 밤, 내일의 승차 기록을 발견한 버스 기사.",
-        opening: "잠깐만요. 카드 단말기에 내일 날짜가 떠요. 근데 같이 탔다는 사람이 당신인데요?",
-        looks: ["#947b9f", "#322e45", "#ac7585", "long"],
-        choices: [
-          ["도착지는 어디예요?", "한성대입구요. 이상하죠? 이 노선은 삼 년 전에 없어졌거든요."],
-          ["승차 기록을 보여줘요.", "여기요. 제 이름 옆에 연필로 쓴 별표 보이죠? 우리 아버지가 쓰던 표시예요."],
-          ["같이 타 볼까요?", "그럼 뒷문 말고 앞문으로 타요. 아버지는 제가 타면 늘 거울부터 맞췄거든요."]
-        ],
-        ending: "유나는 운전석 거울을 조금 낮췄다. 거울 속에서, 젊은 아버지가 두 사람의 표를 끊고 있었다."
+        looks: ["#947b9f", "#2d233c", "#ac7585", "long"],
+        sfx: "bus",
+        episodes: [
+          {
+            title: "1화: 내일의 승차 기록",
+            opening: "잠깐만요. 카드 단말기에 내일 날짜가 떠요. 근데 같이 탔다는 사람이 당신인데요?",
+            choices: [
+              ["도착지는 어디예요?", "한성대입구요. 이상하죠? 이 노선은 삼 년 전에 없어졌거든요."],
+              ["승차 기록을 보여줘요.", "여기요. 제 이름 옆에 연필로 쓴 별표 보이죠? 우리 아버지가 쓰던 표시예요."],
+              ["같이 타 볼까요?", "그럼 뒷문 말고 앞문으로 타요. 아버지는 제가 타면 늘 거울부터 맞췄거든요."]
+            ],
+            ending: "유나는 운전석 거울을 조금 낮췄다. 거울 속에서, 젊은 아버지가 두 사람의 표를 끊고 있었다."
+          },
+          {
+            title: "2화: 비 오는 날의 종점",
+            opening: "성북동 고갯길에 안개가 끼면, 버스가 늘 예정에 없던 종점에 멈춰 서요.",
+            choices: [
+              ["창밖엔 뭐가 보이나요?", "어릴 적 살던 골목이요. 비가 오는데도 가로등 불빛이 따뜻하게 켜져 있어요."],
+              ["내려 본 적 있어요?", "아뇨. 하지만 오늘은 문을 열어 둘게요. 같이 가 보실래요?"]
+            ],
+            ending: "차문이 열리자 빗소리 사이로 그리운 단팥죽 냄새가 번졌다. 두 사람은 천천히 계단을 내려섰다."
+          }
+        ]
       },
       {
         id: "jun", name: "문해준", place: "부산 영도", genre: "미스터리",
         bio: "현상한 필름마다 사라진 등대가 찍히는 사진관 주인.",
-        opening: "방금 맡긴 필름 말이에요. 이 등대, 제가 열 살 때 무너졌는데 어디서 찍으셨어요?",
-        looks: ["#638a97", "#292f37", "#526d7e", "short glasses"],
-        choices: [
-          ["사진 뒷면을 볼까요?", "잠깐, 주소가 있네요. 우리 사진관이에요. 번지까지 같아요."],
-          ["등대에 누가 있었어요?", "빨간 장화를 신은 아이요. 이상한 건 저도 그 장화를 아직 갖고 있다는 거예요."],
-          ["등대로 가 봐요.", "썰물까지 십 분 남았어요. 제 장화 하나 빌려 드릴게요. 짝짝이로 신죠."]
-        ],
-        ending: "물이 빠진 자리에 필름 한 통이 놓여 있었다. 라벨에는 두 사람의 오늘 날짜가 적혀 있었다."
+        looks: ["#638a97", "#232930", "#526d7e", "short glasses"],
+        sfx: "camera",
+        episodes: [
+          {
+            title: "1화: 사라진 등대",
+            opening: "방금 맡긴 필름 말이에요. 이 등대, 제가 열 살 때 무너졌는데 어디서 찍으셨어요?",
+            choices: [
+              ["사진 뒷면을 볼까요?", "잠깐, 주소가 있네요. 우리 사진관이에요. 번지까지 같아요."],
+              ["등대에 누가 있었어요?", "빨간 장화를 신은 아이요. 이상한 건 저도 그 장화를 아직 갖고 있다는 거예요."],
+              ["등대로 가 봐요.", "썰물까지 십 분 남았어요. 제 장화 하나 빌려 드릴게요. 짝짝이로 신죠."]
+            ],
+            ending: "물이 빠진 자리에 필름 한 통이 놓여 있었다. 라벨에는 두 사람의 오늘 날짜가 적혀 있었다."
+          },
+          {
+            title: "2화: 흑백 인화실의 비밀",
+            opening: "빨간 암실 전등 아래서만 보이는 글씨가 있어요. 이 사진 가장자리를 비춰 보세요.",
+            choices: [
+              ["뭐라고 적혀 있나요?", "'기다리는 사람은 반드시 돌아온다'… 어머니의 글씨체예요."],
+              ["사진 속 풍경이 움직여요.", "등대 불빛이 천천히 돌고 있죠? 이 필름, 아직 시간이 흐르고 있나 봐요."]
+            ],
+            ending: "인화지가 마르자 사진 속 등대 위에 새로운 불빛이 하나 더 켜져 있었다."
+          }
+        ]
       },
       {
         id: "sori", name: "강소리", place: "전주 서학동", genre: "판타지",
         bio: "끊어진 가야금 줄에서 남의 꿈을 듣는 악기 수리사.",
-        opening: "문을 살살 닫아 주세요. 이 줄에서 누가 자꾸 잠꼬대를 해서요.",
-        looks: ["#ad886c", "#47302f", "#799489", "long"],
-        choices: [
-          ["무슨 소리가 들려요?", "비 오는 날 기와 끝에서 물 떨어지는 소리요. 그런데 방금 제 이름을 불렀어요."],
-          ["한 번 켜 봐요.", "그럼 저쪽 끝을 잡아 주세요. 혼자 타면 꿈꾸는 사람만 들을 수 있거든요."],
-          ["줄을 고칠 수 있어요?", "고칠 순 있죠. 다만 이 꿈이 끝나기 전에 마지막 음부터 찾아야 해요."]
-        ],
-        ending: "마지막 음이 울리자 마당의 빗물이 멎었다. 소리는 수리 장부에 처음으로 두 사람의 이름을 함께 적었다."
+        looks: ["#ad886c", "#3d2726", "#799489", "wavy"],
+        sfx: "rain",
+        episodes: [
+          {
+            title: "1화: 끊어진 줄의 잠꼬대",
+            opening: "문을 살살 닫아 주세요. 이 줄에서 누가 자꾸 잠꼬대를 해서요.",
+            choices: [
+              ["무슨 소리가 들려요?", "비 오는 날 기와 끝에서 물 떨어지는 소리요. 그런데 방금 제 이름을 불렀어요."],
+              ["한 번 켜 봐요.", "그럼 저쪽 끝을 잡아 주세요. 혼자 타면 꿈꾸는 사람만 들을 수 있거든요."],
+              ["줄을 고칠 수 있어요?", "고칠 순 있죠. 다만 이 꿈이 끝나기 전에 마지막 음부터 찾아야 해요."]
+            ],
+            ending: "마지막 음이 울리자 마당의 빗물이 멎었다. 소리는 수리 장부에 처음으로 두 사람의 이름을 함께 적었다."
+          },
+          {
+            title: "2화: 새벽 세 시의 조율",
+            opening: "낮에는 들리지 않던 소리가 마루 밑에서 올라와요. 누군가 잊어버린 약속 소리예요.",
+            choices: [
+              ["어떤 약속인가요?", "열두 살의 누군가가 '꼭 다시 데리러 올게'라고 속삭였던 말이요."],
+              ["그 소리를 악보로 적을 수 있나요?", "오선지 대신 명주실에 매듭을 묶어요. 자, 이 실을 같이 당겨 주세요."]
+            ],
+            ending: "매듭이 묶이자 마당 배롱나무 꽃잎이 바람도 없이 가야금 통 위로 흩날렸다."
+          }
+        ]
       },
       {
         id: "ian", name: "백이안", place: "서울 을지로", genre: "로맨스",
         bio: "오래된 극장의 마지막 상영표를 두 장 간직한 영사기사.",
-        opening: "표 한 장 남겨 뒀어요. 영화는 이미 시작했는데, 제일 좋은 장면은 아직이에요.",
-        looks: ["#98757f", "#352d32", "#8d6959", "short"],
-        choices: [
-          ["무슨 영화예요?", "제목은 없어요. 동네 사람들이 올해 찍은 걸 제가 이어 붙였거든요."],
-          ["어디에 앉을까요?", "다섯째 줄 왼쪽이요. 거기 앉으면 영사실 창문에 제가 비쳐요."],
-          ["제일 좋은 장면이 뭔데요?", "지금이요. 화면 속의 작년 당신이 오늘 앉은 자리 쪽을 돌아봐요."]
-        ],
-        ending: "불이켜진 뒤에도 둘은 한동안 앉아 있었다. 화면 위로 이름 대신 동네 사람들의 손글씨가 흘렀다."
+        looks: ["#98757f", "#2f262b", "#8d6959", "short"],
+        sfx: "projector",
+        episodes: [
+          {
+            title: "1화: 마지막 상영표",
+            opening: "표 한 장 남겨 뒀어요. 영화는 이미 시작했는데, 제일 좋은 장면은 아직이에요.",
+            choices: [
+              ["무슨 영화예요?", "제목은 없어요. 동네 사람들이 올해 찍은 걸 제가 이어 붙였거든요."],
+              ["어디에 앉을까요?", "다섯째 줄 왼쪽이요. 거기 앉으면 영사실 창문에 제가 비쳐요."],
+              ["제일 좋은 장면이 뭔데요?", "지금이요. 화면 속의 작년 당신이 오늘 앉은 자리 쪽을 돌아봐요."]
+            ],
+            ending: "불이 켜진 뒤에도 둘은 한동안 앉아 있었다. 화면 위로 이름 대신 동네 사람들의 손글씨가 흘렀다."
+          },
+          {
+            title: "2화: 엔딩 크레디트 이후",
+            opening: "영사실 영사기가 멈추면, 렌즈에 맺힌 온기 때문에 유리창에 김이 서려요.",
+            choices: [
+              ["거기에 뭐라고 쓸까요?", "내일 또 만나자는 말요. 이곳은 내일 문을 닫지만 우리는 만날 수 있잖아요."],
+              ["필름을 조금 잘라 줄 수 있나요?", "이 프레임을 가져가세요. 두 사람의 그림자가 겹쳐진 순간이에요."]
+            ],
+            ending: "영사실 불이 꺼지고, 을지로의 가로등 불빛이 두 사람의 발밑을 영사기 불빛처럼 비추었다."
+          }
+        ]
       }
     ];
 
     const $ = selector => document.querySelector(selector);
-    const storageKey = "bampyeonji-market-v1";
+    const storageKey = "bampyeonji-market-v2";
     let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch { saved = {}; }
 
-    try {
-      saved = JSON.parse(localStorage.getItem(storageKey)) || {};
-    } catch {
-      saved = {};
-    }
+    // Theme Management
+    let currentTheme = saved.theme || "dark";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    $("#theme-btn").textContent = currentTheme === "dark" ? "☀️" : "🌙";
+    $("#theme-btn").onclick = () => {
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      $("#theme-btn").textContent = currentTheme === "dark" ? "☀️" : "🌙";
+      save();
+    };
 
-    const custom = Array.isArray(saved.custom) ? saved.custom.filter(c =>
-      c && typeof c.id === "string" && typeof c.name === "string" &&
-      typeof c.bio === "string" && typeof c.opening === "string" &&
-      Array.isArray(c.choices) && Array.isArray(c.looks)
-    ) : [];
+    const custom = Array.isArray(saved.custom) ? saved.custom : [];
     const characters = [...cast, ...custom];
     const favorites = new Set(Array.isArray(saved.favorites) ? saved.favorites : []);
-    const threads = new Map(Array.isArray(saved.threads) ? saved.threads.filter(entry =>
-      Array.isArray(entry) && entry.length === 2 && Array.isArray(entry[1])
-    ) : []);
+    const threads = new Map(Array.isArray(saved.threads) ? saved.threads : []);
+
     let view = "market";
     let genre = "전체";
     let active = null;
-    let session = null;
-    let generation = 0;
-    let busy = false;
-    let storageAvailable = true;
+    let activeEpisodeIndex = 0;
+    let soundEnabled = true;
 
     function save() {
       try {
         localStorage.setItem(storageKey, JSON.stringify({
-          custom, favorites: [...favorites], threads: [...threads]
+          custom, favorites: [...favorites], threads: [...threads], theme: currentTheme
         }));
-      } catch {
-        storageAvailable = false;
-      }
+      } catch {}
     }
 
     function element(tag, className, text) {
@@ -314,18 +654,127 @@
       return node;
     }
 
-    function portrait(character) {
-      const [sky, hair, coat, style] = character.looks;
+    // =========================================================
+    // Web Audio API Synthesizer (Realistic Soundscapes)
+    // =========================================================
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      },
+      play(type) {
+        if (!soundEnabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        if (type === "bus") {
+          // Bus Bell Chime
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(880, now);
+          osc.frequency.exponentialRampToValueAtTime(1760, now + 0.08);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.8);
+        } else if (type === "camera") {
+          // Shutter Click (Filtered noise burst)
+          const bufferSize = ctx.sampleRate * 0.08;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = "bandpass";
+          filter.frequency.value = 1400;
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          noise.start(now);
+        } else if (type === "rain") {
+          // Water Droplet / Pluck
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(980, now);
+          osc.frequency.exponentialRampToValueAtTime(420, now + 0.15);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        } else if (type === "projector") {
+          // Projector Mechanical Click
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(40, now + 0.12);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        }
+      }
+    };
+
+    // =========================================================
+    // Korean Speech Synthesis (TTS Voice Narration)
+    // =========================================================
+    function speakText(text) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ko-KR";
+      utterance.rate = 0.95;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // =========================================================
+    // Anime Portrait Renderer
+    // =========================================================
+    function portrait(c) {
+      const [sky, hair, coat, style] = c.looks;
       const art = element("div", "portrait");
       art.setAttribute("aria-hidden", "true");
       art.style.setProperty("--sky", sky);
       art.style.setProperty("--hair", hair);
       art.style.setProperty("--coat", coat);
+
       const figure = element("div", "figure " + style);
       const face = element("div", "face");
-      face.append(element("span", "eyes"), element("span", "mouth"));
-      figure.append(element("div", "hair"), element("div", "shoulders"),
-        element("div", "neck"), face, element("div", "fringe"));
+      face.append(
+        element("span", "anime-lash"),
+        element("span", "anime-eyes"),
+        element("span", "blush"),
+        element("span", "mouth")
+      );
+
+      figure.append(
+        element("div", "hair"),
+        element("div", "hair-halo"),
+        element("div", "shoulders"),
+        element("div", "collar"),
+        element("div", "neck"),
+        face,
+        element("div", "fringe")
+      );
       art.append(figure);
       return art;
     }
@@ -334,16 +783,21 @@
       const card = element("article", "card");
       const open = element("button", "card-open");
       const copy = element("div", "card-copy");
-      copy.append(element("small", "", `${c.place} · ${c.genre}`),
-        element("h3", "", c.name), element("p", "", c.bio));
+
+      const tagRow = element("div", "card-tags");
+      tagRow.append(element("small", "", `${c.place} · ${c.genre}`));
+      tagRow.append(element("small", "", `${(c.episodes || [1]).length}개의 에피소드`));
+
+      copy.append(tagRow, element("h3", "", c.name), element("p", "", c.bio));
       open.append(portrait(c), copy);
-      open.onclick = () => openChat(c);
+      open.onclick = () => openChat(c, 0);
 
       const liked = favorites.has(c.id);
       const heart = element("button", "heart", liked ? "♥" : "♡");
       heart.setAttribute("aria-label", `${c.name} 찜`);
       heart.setAttribute("aria-pressed", String(liked));
-      heart.onclick = () => {
+      heart.onclick = e => {
+        e.stopPropagation();
         if (favorites.has(c.id)) favorites.delete(c.id);
         else favorites.add(c.id);
         save();
@@ -402,164 +856,272 @@
     });
     $("#home").onclick = () => selectView("market");
     $("#search").oninput = render;
-    $("#featured-chat").onclick = () => openChat(cast[0]);
+    $("#featured-chat").onclick = () => openChat(cast[0], 0);
 
+    // =========================================================
+    // Chat & Episode Logic
+    // =========================================================
     function refreshChat() {
-      const history = threads.get(active.id);
-      const bubbles = history.map(item => {
-        const bubble = element("p", item.role === "user" ? "message mine" : "message", item.text);
-        bubble.setAttribute("aria-label", `${item.role === "user" ? "나" : active.name}: ${item.text}`);
-        return bubble;
+      const threadKey = `${active.id}-ep${activeEpisodeIndex}`;
+      const ep = active.episodes[activeEpisodeIndex];
+      const history = threads.get(threadKey) || [{ role: "assistant", text: ep.opening }];
+
+      const rows = history.map(item => {
+        const row = element("div", `bubble-row ${item.role === "user" ? "mine" : ""}`);
+        const bubble = element("p", "message", item.text);
+        row.append(bubble);
+
+        if (item.role === "assistant") {
+          const speak = element("button", "speak-btn", "🔊");
+          speak.title = "목소리 듣기";
+          speak.onclick = () => speakText(item.text);
+          row.append(speak);
+        }
+        return row;
       });
-      $("#log").replaceChildren(...bubbles);
+      $("#log").replaceChildren(...rows);
       $("#log").scrollTop = $("#log").scrollHeight;
+
+      // Suggestions
       const used = new Set(history.map(item => item.choice).filter(Boolean));
-      const suggestions = active.choices.filter(([question]) => !used.has(question));
+      const suggestions = (ep.choices || []).filter(([q]) => !used.has(q));
       $("#prompts").replaceChildren(...suggestions.map(([question]) => {
-        const button = element("button", "", question);
-        button.disabled = busy;
-        button.onclick = () => send(question);
-        return button;
+        const btn = element("button", "", question);
+        btn.onclick = () => send(question);
+        return btn;
       }));
-      $("#composer button").disabled = busy;
-      const mode = session ? "기기 내 AI 채팅" : "대본형 채팅";
-      $("#mode").textContent = busy ? "답장을 쓰고 있어요…"
-        : `${mode} · ${storageAvailable ? "이 브라우저에 대화가 저장됩니다." : "현재 탭에서만 대화가 유지됩니다."}`;
+
+      // Render Episode Tabs
+      $("#story-tabs").replaceChildren(...active.episodes.map((item, idx) => {
+        const tab = element("button", "story-tab", item.title);
+        tab.setAttribute("aria-selected", String(idx === activeEpisodeIndex));
+        tab.onclick = () => openChat(active, idx);
+        return tab;
+      }));
     }
 
-    async function openChat(c) {
+    function openChat(c, epIndex = 0) {
       active = c;
-      busy = false;
-      const ticket = ++generation;
-      const history = threads.get(c.id) || [{ role: "assistant", text: c.opening }];
-      threads.delete(c.id);
-      threads.set(c.id, history);
+      activeEpisodeIndex = epIndex;
+      const threadKey = `${c.id}-ep${epIndex}`;
+      const ep = c.episodes[epIndex];
+
+      if (!threads.has(threadKey)) {
+        threads.set(threadKey, [{ role: "assistant", text: ep.opening }]);
+      }
       save();
+
       $("#setting").textContent = `${c.place} · ${c.genre}`;
-      $("#chat-name").textContent = c.name;
+      $("#chat-name").textContent = `${c.name} - ${ep.title}`;
       $("#message").value = "";
       $("#chat").showModal();
+      AudioEngine.play(c.sfx || "bus");
       refreshChat();
       $("#message").focus();
-
-      // Local mode remains playable in browsers without an installed model.
-      try {
-        const model = globalThis.LanguageModel;
-        if (!model) return;
-        const options = {
-          expectedInputs: [{ type: "text", languages: ["ko"] }],
-          expectedOutputs: [{ type: "text", languages: ["ko"] }]
-        };
-        if (await model.availability(options) !== "available" || ticket !== generation) return;
-        const created = await model.create({
-          ...options,
-          initialPrompts: [{
-            role: "system",
-            content: `한국 단편 드라마의 가상 인물 ${c.name}을 연기하세요. 배경은 ${c.place}입니다. 설정: ${c.bio} 한국어로 자연스럽게 한두 문장씩 답하고 상대방의 행동은 대신 결정하지 마세요.`
-          }]
-        });
-        if (ticket !== generation) created.destroy();
-        else { session = created; refreshChat(); }
-      } catch {
-        // The authored story stays available when local inference is unavailable.
-      }
     }
 
-    function scriptedReply(c, text, history) {
-      const choice = c.choices.find(([question]) => question === text);
-      if (choice) return { text: choice[1], choice: choice[0] };
-      const used = new Set(history.map(item => item.choice).filter(Boolean));
-      const next = c.choices.find(([question]) => !used.has(question));
-      if (next) return { text: next[1], choice: next[0] };
-      if (!history.some(item => item.ending)) return { text: c.ending, ending: true };
-      return { text: "이 단편의 마지막 장면입니다. 다른 인물의 이야기는 캐릭터 마켓에서 열어 보세요." };
-    }
-
-    async function send(raw) {
+    function send(raw) {
       const text = raw.trim().slice(0, 600);
-      if (!text || busy || !active) return;
+      if (!text || !active) return;
       const c = active;
-      const history = threads.get(c.id);
-      const ticket = generation;
-      const engine = session;
-      const userLine = { role: "user", text };
-      history.push(userLine);
+      const ep = c.episodes[activeEpisodeIndex];
+      const threadKey = `${c.id}-ep${activeEpisodeIndex}`;
+      const history = threads.get(threadKey);
+
+      history.push({ role: "user", text });
       $("#message").value = "";
-      busy = true;
-      save();
       refreshChat();
 
-      let reply;
-      if (engine) {
-        try {
-          const transcript = history.slice(-14).map(line =>
-            `${line.role === "user" ? "상대" : c.name}: ${line.text}`
-          ).join("\n");
-          const answer = await engine.prompt(`장면의 최근 대화입니다.\n${transcript}\n${c.name}의 다음 대사만 작성하세요.`);
-          if (!answer.trim()) throw new Error("Empty response");
-          reply = { text: answer.trim(), choice: c.choices.find(([q]) => q === text)?.[0] };
-        } catch {
-          if (ticket === generation) { session?.destroy(); session = null; }
+      // Scripted branching reply
+      setTimeout(() => {
+        const choice = (ep.choices || []).find(([q]) => q === text);
+        let replyText = choice ? choice[1] : null;
+
+        if (!replyText) {
+          const used = new Set(history.map(item => item.choice).filter(Boolean));
+          const next = (ep.choices || []).find(([q]) => !used.has(q));
+          replyText = next ? next[1] : ep.ending || "이 장면의 마지막 대화입니다.";
         }
-      }
-      if (ticket !== generation) return;
-      reply ||= scriptedReply(c, text, history);
-      history.push({ role: "assistant", ...reply });
-      busy = false;
-      save();
-      refreshChat();
-      $("#message").focus();
+
+        history.push({ role: "assistant", text: replyText, choice: text });
+        save();
+        AudioEngine.play(c.sfx || "bus");
+        refreshChat();
+      }, 350);
     }
 
-    $("#composer").onsubmit = event => {
-      event.preventDefault();
+    $("#composer").onsubmit = e => {
+      e.preventDefault();
       send($("#message").value);
     };
 
-    $("#chat").addEventListener("close", () => {
-      generation++;
-      if (busy && active) {
-        const history = threads.get(active.id);
-        const last = history.at(-1);
-        if (last?.role === "user") {
-          history.push({ role: "assistant", ...scriptedReply(active, last.text, history) });
-          save();
-        }
-      }
-      session?.destroy();
-      session = null;
-      busy = false;
-      active = null;
-      render();
-    });
+    // Sound toggle
+    $("#sound-btn").onclick = () => {
+      soundEnabled = !soundEnabled;
+      $("#sound-btn").textContent = soundEnabled ? "🔊" : "🔇";
+    };
 
-    $("#create").onclick = () => $("#studio").showModal();
-    $("#creator").onsubmit = event => {
-      event.preventDefault();
-      const form = event.currentTarget;
+    // Copy dialogue
+    $("#export-txt").onclick = () => {
+      const threadKey = `${active.id}-ep${activeEpisodeIndex}`;
+      const history = threads.get(threadKey) || [];
+      const transcript = history.map(h => `${h.role === 'user' ? '나' : active.name}: ${h.text}`).join('\n\n');
+      navigator.clipboard.writeText(transcript).then(() => alert("대화 대본이 클립보드에 복사되었습니다!"));
+    };
+
+    // =========================================================
+    // Keepsake Postcard Export ("편지로 간직하기")
+    // =========================================================
+    $("#letter-btn").onclick = () => {
+      if (!active) return;
+      const ep = active.episodes[activeEpisodeIndex];
+      const threadKey = `${active.id}-ep${activeEpisodeIndex}`;
+      const history = threads.get(threadKey) || [];
+      const lastLine = history.findLast(h => h.role === "assistant")?.text || ep.opening;
+
+      $("#letter-title").textContent = `${active.name}의 밤편지`;
+      $("#letter-date").textContent = new Date().toLocaleDateString("ko-KR", {
+        year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+      });
+      $("#letter-body").innerHTML = `
+        <p><strong>장소:</strong> ${active.place}</p>
+        <p><strong>이야기:</strong> "${ep.title}"</p>
+        <blockquote style="margin: 16px 0; padding-left: 12px; border-left: 3px solid #b86f84; font-style: italic;">
+          "${lastLine}"
+        </blockquote>
+        <p style="color: #6d5b61; font-size: 13.5px;">${ep.ending || active.bio}</p>
+      `;
+      $("#letter-sign").textContent = `— ${active.place}에서, ${active.name}`;
+      $("#letter-dialog").showModal();
+    };
+
+    $("#copy-letter-btn").onclick = () => {
+      const text = $("#letter-card").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("편지가 복사되었습니다! 소중한 사람에게 전해 보세요.");
+        $("#letter-dialog").close();
+      });
+    };
+
+    // =========================================================
+    // Dynamic Starfall Sky Canvas (Shooting Stars & Twinkling)
+    // =========================================================
+    const canvas = document.getElementById("sky-canvas");
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+    let shootingStars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = Array.from({ length: 65 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5 + 0.4,
+        alpha: Math.random(),
+        speed: Math.random() * 0.02 + 0.005
+      }));
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function addShootingStar() {
+      shootingStars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * (canvas.height * 0.4),
+        len: Math.random() * 70 + 60,
+        speed: Math.random() * 9 + 7,
+        alpha: 1
+      });
+    }
+    setInterval(() => { if (Math.random() > 0.4) addShootingStar(); }, 4000);
+
+    function renderSky() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const starColor = currentTheme === "dark" ? "255, 248, 230" : "110, 80, 130";
+
+      // Stars
+      stars.forEach(s => {
+        s.alpha += s.speed;
+        if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+        ctx.fillStyle = `rgba(${starColor}, ${Math.abs(s.alpha)})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Shooting stars
+      shootingStars.forEach((ss, i) => {
+        ctx.strokeStyle = `rgba(${starColor}, ${ss.alpha})`;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(ss.x - ss.len, ss.y + ss.len * 0.6);
+        ctx.stroke();
+        ss.x += ss.speed;
+        ss.y += ss.speed * 0.6;
+        ss.alpha -= 0.02;
+        if (ss.alpha <= 0) shootingStars.splice(i, 1);
+      });
+
+      requestAnimationFrame(renderSky);
+    }
+    renderSky();
+
+    // =========================================================
+    // Studio Live Avatar Preview
+    // =========================================================
+    function updateStudioPreview() {
+      const hair = $("#picker-hair").value;
+      const coat = $("#picker-coat").value;
+      const sky = $("#picker-sky").value;
+      const style = $("#picker-style").value;
+      const dummyChar = { looks: [sky, hair, coat, style] };
+      $("#preview-avatar").replaceChildren(portrait(dummyChar));
+    }
+    $("#picker-hair").oninput = updateStudioPreview;
+    $("#picker-coat").oninput = updateStudioPreview;
+    $("#picker-sky").oninput = updateStudioPreview;
+    $("#picker-style").onchange = updateStudioPreview;
+
+    $("#create").onclick = () => {
+      updateStudioPreview();
+      $("#studio").showModal();
+    };
+
+    $("#creator").onsubmit = e => {
+      e.preventDefault();
+      const form = e.currentTarget;
       const values = Object.fromEntries(new FormData(form));
-      for (const key of Object.keys(values)) {
-        values[key] = values[key].trim();
-        if (!values[key]) { form.elements[key].focus(); return; }
-      }
-      const c = {
+
+      const newChar = {
         id: "original-" + crypto.randomUUID(),
-        name: values.name, place: values.place, genre: values.genre,
-        bio: values.bio, opening: values.opening,
-        looks: [...cast[custom.length % cast.length].looks],
-        choices: [
-          ["여기는 어디예요?", `${values.place}예요. ${values.bio}`],
-          ["숨기고 있는 게 있나요?", values.secret]
-        ],
-        ending: `${values.name}은 잠시 말을 멈췄다. ${values.place}에서 두 사람의 첫 이야기가 그렇게 끝났다.`
+        name: values.name.trim(),
+        place: values.place.trim(),
+        genre: values.genre,
+        bio: values.bio.trim(),
+        looks: [$("#picker-sky").value, $("#picker-hair").value, $("#picker-coat").value, $("#picker-style").value],
+        sfx: "rain",
+        episodes: [
+          {
+            title: "1화: 시작된 인연",
+            opening: values.opening.trim(),
+            choices: [
+              ["여기는 어떤 곳인가요?", `${values.place}예요. ${values.bio}`],
+              ["숨겨 둔 비밀이 있나요?", values.secret.trim()]
+            ],
+            ending: `${values.name}은(는) 가만히 미소 지었다. ${values.place}의 밤하늘 위로 두 사람의 별이 떠올랐다.`
+          }
+        ]
       };
-      custom.push(c);
-      characters.unshift(c);
+
+      custom.unshift(newChar);
+      characters.unshift(newChar);
       save();
       form.reset();
       $("#studio").close();
       selectView("market");
-      openChat(c);
+      openChat(newChar, 0);
     };
 
     render();
