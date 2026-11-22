@@ -361,9 +361,34 @@
     label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 500; }
     textarea { resize: vertical; min-height: 60px; }
 
+    .site-footer {
+      margin-top: 50px;
+      padding: 32px 36px;
+      border-radius: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .site-footer h3 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      letter-spacing: -0.04em;
+    }
+    .site-footer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+
     @media (max-width: 768px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
       .studio-grid { grid-template-columns: 1fr; }
+      .site-footer { flex-direction: column; align-items: flex-start; }
     }
     @media (max-width: 540px) {
       header { flex-direction: column; align-items: flex-start; gap: 14px; }
@@ -387,6 +412,7 @@
         <button data-view="history" aria-pressed="false">이어보기</button>
         <button data-view="favorites" aria-pressed="false">찜한 캐릭터</button>
         <button id="create">＋ 캐릭터 만들기</button>
+        <button id="inquiry-btn">🤝 제휴 문의</button>
         <button class="theme-toggle" id="theme-btn" aria-label="테마 변경">☀️</button>
       </nav>
     </header>
@@ -410,6 +436,14 @@
         <div class="grid" id="grid"></div>
         <p class="muted" id="empty" hidden></p>
       </section>
+
+      <footer class="site-footer">
+        <div class="footer-copy">
+          <h3>밤편지와 함께할 작가님과 파트너를 찾습니다</h3>
+          <p>캐릭터 IP 입점, 브랜드 협업, 외주 라이선스 등 어떤 이야기든 편하게 남겨주세요.</p>
+        </div>
+        <button class="primary" id="footer-inquiry-btn">제휴 문의 보내기 →</button>
+      </footer>
     </main>
   </div>
 
@@ -495,6 +529,42 @@
         <button class="primary" style="margin-top: 8px;">내 마켓에 등록하기</button>
       </form>
     </div>
+  </dialog>
+
+  <!-- Partnership Inquiry Dialog (Formspree) -->
+  <dialog id="inquiry-dialog" aria-labelledby="inquiry-title">
+    <div class="dialog-head">
+      <div>
+        <small style="color:var(--peach); font-weight:700;">PARTNERSHIP & INQUIRY</small>
+        <h2 id="inquiry-title">제휴 및 입점 문의</h2>
+      </div>
+      <form method="dialog"><button aria-label="문의 닫기">✕</button></form>
+    </div>
+    <form class="workshop" id="inquiry-form" action="https://formspree.io/f/mppdyvyd" method="POST" style="padding: 22px;">
+      <label>
+        성함 / 회사명 (단체명)
+        <input type="text" name="name" required placeholder="예: 홍길동 (또는 스튜디오 이름)" maxlength="50">
+      </label>
+      <label>
+        회신받으실 이메일
+        <input type="email" name="email" required placeholder="contact@example.com">
+      </label>
+      <label>
+        문의 유형
+        <select name="category">
+          <option value="작가 입점">캐릭터 작가 입점 문의</option>
+          <option value="브랜드 제휴">브랜드 / 기업 콜라보레이션</option>
+          <option value="외주 및 라이선스">캐릭터 라이선스 및 외주</option>
+          <option value="기타 문의">기타 일반 문의</option>
+        </select>
+      </label>
+      <label>
+        제휴 및 문의 내용
+        <textarea name="message" required placeholder="협업 희망 사항이나 포트폴리오 링크, 궁금하신 점을 자유롭게 적어주세요." rows="4"></textarea>
+      </label>
+      <div id="inquiry-status" style="display:none; font-size:13.5px; padding:12px 14px; border-radius:12px; background:var(--peach-tint); color:var(--peach); border:1px solid var(--peach); line-height: 1.5;"></div>
+      <button class="primary" type="submit" id="inquiry-submit-btn" style="margin-top: 6px; padding: 12px; font-size: 15px;">문의 보내기</button>
+    </form>
   </dialog>
 
   <script>
@@ -1122,6 +1192,65 @@
       $("#studio").close();
       selectView("market");
       openChat(newChar, 0);
+    };
+
+    // =========================================================
+    // Partnership Inquiry Form (Formspree Integration)
+    // =========================================================
+    const openInquiryModal = () => {
+      $("#inquiry-form").reset();
+      const status = $("#inquiry-status");
+      status.style.display = "none";
+      const btn = $("#inquiry-submit-btn");
+      btn.disabled = false;
+      btn.textContent = "문의 보내기";
+      $("#inquiry-dialog").showModal();
+    };
+
+    $("#inquiry-btn").onclick = openInquiryModal;
+    $("#footer-inquiry-btn").onclick = openInquiryModal;
+
+    $("#inquiry-form").onsubmit = async e => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const status = $("#inquiry-status");
+      const btn = $("#inquiry-submit-btn");
+
+      btn.disabled = true;
+      btn.textContent = "전송 중...";
+      status.style.display = "block";
+      status.style.borderColor = "var(--peach)";
+      status.style.color = "var(--peach)";
+      status.textContent = "💌 제휴 문의를 안전하게 전송하고 있습니다...";
+
+      try {
+        const response = await fetch("https://formspree.io/f/mppdyvyd", {
+          method: "POST",
+          body: new FormData(form),
+          headers: { "Accept": "application/json" }
+        });
+
+        if (response.ok) {
+          form.reset();
+          status.style.borderColor = "#4ade80";
+          status.style.color = "#4ade80";
+          status.textContent = "✨ 문의가 성공적으로 전송되었습니다! 담당자가 검토 후 남겨주신 이메일로 회신드리겠습니다.";
+          setTimeout(() => {
+            $("#inquiry-dialog").close();
+            status.style.display = "none";
+            btn.disabled = false;
+            btn.textContent = "문의 보내기";
+          }, 3200);
+        } else {
+          throw new Error("Formspree error");
+        }
+      } catch (err) {
+        status.style.borderColor = "#f87171";
+        status.style.color = "#f87171";
+        status.textContent = "⚠️ 전송 중 오류가 발생했습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.";
+        btn.disabled = false;
+        btn.textContent = "다시 시도";
+      }
     };
 
     render();
