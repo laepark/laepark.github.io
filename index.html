@@ -4,7 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#151322">
-  <title>밤편지 | 한국 캐릭터 마켓</title>
+  <title>밤편지 | 한국 캐릭터 마켓 & 단편 문학 아카이브</title>
+  <!-- SEO & Semantic Meta Tags (Google AdSense Quality Standards) -->
+  <meta name="description" content="밤편지(Bampyeonji)는 한국의 서정과 도시의 밤을 배경으로 펼쳐지는 오리지널 캐릭터 단편 문학 및 인터랙티브 스토리텔링 플랫폼입니다. 성북동 SF, 부산 영도 미스터리, 전주 판타지, 을지로 로맨스 등 차별화된 고품질 오리지널 이야기를 만나보세요.">
+  <meta name="keywords" content="밤편지, 한국 캐릭터, 단편 문학, 인터랙티브 소설, 서유나, 문해준, 강소리, 백이안, 한국 SF, 부산 미스터리, 전주 판타지, 을지로 로맨스, 감성 스토리텔링">
+  <meta name="author" content="밤편지 스튜디오 (Bampyeonji)">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="밤편지 | 한국 캐릭터 마켓 & 단편 문학 아카이브">
+  <meta property="og:description" content="성북동 막차의 시간 여행, 영도의 사라진 등대, 전주의 꿈을 듣는 가야금. 오리지널 한국 감성 인터랙티브 소설 플랫폼.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://product-builder-lecture.laeeun123.workers.dev/">
+  
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "밤편지 (Bampyeonji)",
+    "url": "https://product-builder-lecture.laeeun123.workers.dev/",
+    "description": "한국 단편 문학 및 오리지널 캐릭터 인터랙티브 스토리텔링 플랫폼",
+    "inLanguage": "ko-KR",
+    "publisher": {
+      "@type": "Organization",
+      "name": "밤편지 스튜디오"
+    }
+  }
+  </script>
+
   <!-- Google AdSense -->
   <meta name="google-adsense-account" content="ca-pub-5422038280137630">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5422038280137630"
@@ -427,8 +453,144 @@
       font-weight: 500;
     }
 
+    /* Literary Story & Worldview Archive Section */
+    .lore-section {
+      margin-top: 68px;
+      padding-top: 8px;
+    }
+    .lore-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+      margin-top: 22px;
+    }
+    .lore-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .lore-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--peach);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+    .lore-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .lore-tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--peach);
+      background: var(--peach-tint);
+      padding: 4px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--peach);
+    }
+    .lore-card h3 {
+      font-size: 20px;
+      margin: 0 0 10px;
+      line-height: 1.45;
+      font-family: Georgia, "Batang", serif;
+      letter-spacing: -0.04em;
+    }
+    .lore-card p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.75;
+      margin: 0 0 18px;
+      opacity: 0.9;
+    }
+    .lore-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      margin-top: auto;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .lore-read-btn {
+      background: transparent;
+      border: 1px solid var(--peach);
+      color: var(--peach);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .lore-read-btn:hover {
+      background: var(--peach);
+      color: var(--bg);
+    }
+
+    /* Legal & Editorial Modals */
+    .legal-content {
+      padding: 22px 24px;
+      line-height: 1.85;
+      font-size: 14px;
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+    .legal-content h3 {
+      font-size: 16.5px;
+      margin: 20px 0 8px;
+      color: var(--peach);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+    .legal-content p, .legal-content ul {
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+    .legal-content ul {
+      padding-left: 20px;
+    }
+    .site-footer-nav {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 0 10px;
+      border-top: 1px solid var(--line);
+      margin-top: 24px;
+    }
+    .site-footer-nav button {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      padding: 4px 8px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .site-footer-nav button:hover {
+      color: var(--peach);
+    }
+    .copyright-note {
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
     @media (max-width: 768px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
+      .lore-grid { grid-template-columns: 1fr; }
       .studio-grid { grid-template-columns: 1fr; }
       .site-footer { flex-direction: column; align-items: flex-start; }
       .comments-section { padding: 22px 18px; }
@@ -452,6 +614,7 @@
       </div>
       <nav aria-label="주요 메뉴">
         <button data-view="market" aria-pressed="true">캐릭터 마켓</button>
+        <button id="lore-nav">📖 단편 아카이브</button>
         <button data-view="history" aria-pressed="false">이어보기</button>
         <button data-view="favorites" aria-pressed="false">찜한 캐릭터</button>
         <button id="create">＋ 캐릭터 만들기</button>
@@ -479,6 +642,77 @@
         <div class="filters" id="filters" aria-label="장르 필터"></div>
         <div class="grid" id="grid"></div>
         <p class="muted" id="empty" hidden></p>
+      </section>
+
+      <!-- Comprehensive Literary Lore & Story Archive (Google AdSense Quality Content Requirement) -->
+      <section class="lore-section" id="lore" aria-labelledby="lore-title">
+        <div class="section-head" style="margin-top: 0; margin-bottom: 8px;">
+          <div>
+            <h2 id="lore-title">📖 밤편지 단편 아카이브 & 작가의 방</h2>
+            <small style="color:var(--muted); font-size:14px; margin-top:6px; display:inline-block;">각 캐릭터의 서사가 시작된 도시의 공간과 오리지널 문학 세계관 해설을 읽어보세요.</small>
+          </div>
+        </div>
+        <div class="lore-grid">
+          <article class="lore-card">
+            <div>
+              <div class="lore-header">
+                <span class="lore-tag">서울 성북동 · SF 문학</span>
+                <span style="font-size:12px; color:var(--muted);">읽는 시간 3분</span>
+              </div>
+              <h3>자정의 버스 정류장과 내일로 향하는 시간 여행</h3>
+              <p>성북동 언덕길, 삼 년 전 폐선된 버스 노선의 마지막 승차 기록에 내일의 날짜가 찍히며 시작되는 이야기. 도심의 고독한 밤과 부녀간의 애틋한 기억을 시간 역전 SF 기법으로 섬세하게 풀어낸 단편 문학 해설입니다.</p>
+            </div>
+            <div class="lore-footer">
+              <span>기획: 밤편지 문학팀 · 서유나 편</span>
+              <button class="lore-read-btn" onclick="openEssay('yuna')">원문 산문 읽기 →</button>
+            </div>
+          </article>
+
+          <article class="lore-card">
+            <div>
+              <div class="lore-header">
+                <span class="lore-tag">부산 영도 · 감성 미스터리</span>
+                <span style="font-size:12px; color:var(--muted);">읽는 시간 3분</span>
+              </div>
+              <h3>영도 바다의 썰물과 잊혀진 등대의 필름</h3>
+              <p>썰물이 되면 잠시 모습을 드러내는 절벽 밑 작은 사진관. 십 년 전 거센 태풍에 무너져 사라졌던 하얀 등대가 현상된 필름마다 선명히 찍혀 나오는 기이한 현상과, 잊고 살았던 유년의 상처를 치유하는 추리 서사입니다.</p>
+            </div>
+            <div class="lore-footer">
+              <span>기획: 밤편지 문학팀 · 문해준 편</span>
+              <button class="lore-read-btn" onclick="openEssay('jun')">원문 산문 읽기 →</button>
+            </div>
+          </article>
+
+          <article class="lore-card">
+            <div>
+              <div class="lore-header">
+                <span class="lore-tag">전주 서학동 · 전통 판타지</span>
+                <span style="font-size:12px; color:var(--muted);">읽는 시간 3분</span>
+              </div>
+              <h3>기와 끝 빗소리와 꿈을 연주하는 열두 줄 가야금</h3>
+              <p>서학동 예술마을의 한옥 공방에서 끊어진 악기 줄을 매만지며 타인의 잃어버린 꿈과 잠꼬대를 듣는 악기 수리사의 이야기. 한국 전통 현악기의 깊은 공명과 비 내리는 날의 정취를 민담풍 현대 판타지로 녹여냈습니다.</p>
+            </div>
+            <div class="lore-footer">
+              <span>기획: 밤편지 문학팀 · 강소리 편</span>
+              <button class="lore-read-btn" onclick="openEssay('sori')">원문 산문 읽기 →</button>
+            </div>
+          </article>
+
+          <article class="lore-card">
+            <div>
+              <div class="lore-header">
+                <span class="lore-tag">서울 을지로 · 아날로그 로맨스</span>
+                <span style="font-size:12px; color:var(--muted);">읽는 시간 3분</span>
+              </div>
+              <h3>철공소 골목 끝, 마지막 35mm 영화 영사기의 온기</h3>
+              <p>현대식 멀티플렉스가 대신할 수 없는 아날로그 필름의 회전음과 빛바랜 상영관. 철공소 골목 안 오래된 단관 극장에서 이웃들의 일상을 모아 작은 영화를 상영하는 영사기사의 따뜻한 휴머니즘 로맨스를 조명합니다.</p>
+            </div>
+            <div class="lore-footer">
+              <span>기획: 밤편지 문학팀 · 백이안 편</span>
+              <button class="lore-read-btn" onclick="openEssay('ian')">원문 산문 읽기 →</button>
+            </div>
+          </article>
+        </div>
       </section>
 
       <!-- Google AdSense Responsive Unit -->
@@ -513,6 +747,18 @@
           <p>캐릭터 IP 입점, 브랜드 협업, 외주 라이선스 등 어떤 이야기든 편하게 남겨주세요.</p>
         </div>
         <button class="primary" id="footer-inquiry-btn">제휴 문의 보내기 →</button>
+
+        <!-- Google AdSense Mandatory Compliance Links -->
+        <div class="site-footer-nav" aria-label="법적 고지 및 사이트 안내">
+          <button type="button" id="about-btn">서비스 소개 (About)</button>
+          <button type="button" id="privacy-btn">개인정보처리방침 (Privacy Policy)</button>
+          <button type="button" id="terms-btn">이용약관 (Terms)</button>
+          <button type="button" onclick="document.getElementById('inquiry-btn').click()">문의 및 고객지원 (Contact)</button>
+        </div>
+        <div class="copyright-note">
+          <p style="margin: 0;"><strong>밤편지 (Bampyeonji)</strong> | 독창적인 한국 단편 문학 & 캐릭터 인터랙티브 미디어 플랫폼</p>
+          <p style="margin: 4px 0 0; opacity: 0.75;">© 2026 Bampyeonji Studio. All content is protected by copyright law. Google AdSense Certified Publisher.</p>
+        </div>
       </footer>
     </main>
   </div>
@@ -635,6 +881,112 @@
       <div id="inquiry-status" style="display:none; font-size:13.5px; padding:12px 14px; border-radius:12px; background:var(--peach-tint); color:var(--peach); border:1px solid var(--peach); line-height: 1.5;"></div>
       <button class="primary" type="submit" id="inquiry-submit-btn" style="margin-top: 6px; padding: 12px; font-size: 15px;">문의 보내기</button>
     </form>
+  </dialog>
+
+  <!-- Literary Essay Viewer Dialog -->
+  <dialog id="essay-dialog" aria-labelledby="essay-title">
+    <div class="dialog-head">
+      <div>
+        <small id="essay-meta" style="color:var(--peach); font-weight:700;">단편 문학 원문 아카이브</small>
+        <h2 id="essay-title"></h2>
+      </div>
+      <form method="dialog"><button aria-label="닫기">✕</button></form>
+    </div>
+    <div class="legal-content" id="essay-body"></div>
+    <div style="padding: 14px 22px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--line);">
+      <span style="font-size:12px; color:var(--muted);">밤편지 단편 아카이브 · 무단 전재 및 재배포 금지</span>
+      <form method="dialog"><button class="primary" style="padding:6px 14px; font-size:13px;">닫기</button></form>
+    </div>
+  </dialog>
+
+  <!-- About Us Dialog (Google AdSense Quality Requirement) -->
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <div class="dialog-head">
+      <div>
+        <small style="color:var(--peach); font-weight:700;">ABOUT BAMPYEONJI</small>
+        <h2 id="about-title">밤편지 서비스 소개 및 기획 철학</h2>
+      </div>
+      <form method="dialog"><button aria-label="닫기">✕</button></form>
+    </div>
+    <div class="legal-content">
+      <h3>1. 밤편지(Bampyeonji)란?</h3>
+      <p>밤편지는 한국의 서정적인 정취와 도시의 고독한 밤 풍경을 모티브로 한 <strong>오리지널 캐릭터 단편 문학 및 인터랙티브 스토리텔링 플랫폼</strong>입니다. 현대인들이 밤늦은 시간 스마트폰과 브라우저를 통해 따뜻한 위로와 사색을 얻을 수 있는 디지털 문학 공간을 지향합니다.</p>
+      
+      <h3>2. 오리지널 창작과 로컬 문화의 결합</h3>
+      <p>단순한 가상 대화를 넘어, <strong>서울 성북동, 부산 영도, 전주 서학동, 서울 을지로</strong> 등 한국 고유의 도시와 공간이 지닌 인문학적 배경을 바탕으로 독창적인 세계관과 캐릭터를 기획합니다. 각 작품은 SF, 미스터리, 전통 판타지, 아날로그 로맨스 등 다채로운 장르적 실험을 담고 있습니다.</p>
+
+      <h3>3. 사용자 중심의 인터랙티브 미디어</h3>
+      <p>자체 개발한 순수 CSS 벡터 캐릭터 아트워크, 브라우저 합성 Web Audio 사운드스케이프, 에피소드 분기형 대사 선택 시스템, 그리고 독자의 감상을 나누는 달빛 방명록을 통해 일방향 소비를 넘어 창작자와 독자가 함께 호흡하는 양방향 문화 콘텐츠를 구축해 나가고 있습니다.</p>
+
+      <h3>4. 지속 가능한 창작 생태계</h3>
+      <p>밤편지는 독립 신진 작가 및 일러스트레이터와의 상생을 지향합니다. 플랫폼 내 제휴 문의 및 작가 입점 프로그램을 통해 창작자들의 오리지널 캐릭터와 단편 이야기가 디지털 공간에서 가치를 인정받을 수 있도록 지원합니다.</p>
+    </div>
+  </dialog>
+
+  <!-- Privacy Policy Dialog (Strict Google AdSense & GDPR Compliance) -->
+  <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+    <div class="dialog-head">
+      <div>
+        <small style="color:var(--peach); font-weight:700;">LEGAL & PRIVACY</small>
+        <h2 id="privacy-title">개인정보처리방침 (Privacy Policy)</h2>
+      </div>
+      <form method="dialog"><button aria-label="닫기">✕</button></form>
+    </div>
+    <div class="legal-content">
+      <p>밤편지(이하 "서비스")는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 및 Google AdSense 프로그램 정책을 준수하고 있습니다. 본 방침은 서비스가 수집하는 정보와 그 이용 목적, 제3자 광고 쿠키 정책에 대해 투명하게 공개합니다.</p>
+
+      <h3>1. 개인정보 수집 항목 및 방법</h3>
+      <ul>
+        <li><strong>제휴 문의 시:</strong> 성함/회사명, 이메일 주소, 문의 내용 (Formspree 서비스 경유, 회신 완료 후 목적 달성 시 파기)</li>
+        <li><strong>서비스 이용 과정에서 자동 생성되는 정보:</strong> 접속 로그, 기기 정보, 브라우저 종류, 쿠키(Cookie) 및 로컬 저장소(localStorage) 데이터</li>
+      </ul>
+
+      <h3>2. 로컬 저장소(localStorage)의 사용</h3>
+      <p>서비스는 이용자의 편의를 위해 로그인 없이도 브라우저의 로컬 저장소를 활용하여 <em>'다크/라이트 테마 설정', '찜한 캐릭터 목록', '대화 기록'</em>을 기기 내에만 안전하게 보관합니다. 이 데이터는 외부 서버로 전송되지 않습니다.</p>
+
+      <h3>3. 구글 애드센스(Google AdSense) 및 제3자 광고 쿠키 정책</h3>
+      <ul>
+        <li>본 웹사이트는 구글(Google Inc.)이 제공하는 웹 광고 서비스인 <strong>Google AdSense</strong>를 게재합니다.</li>
+        <li>구글을 포함한 제3자 공급업체는 쿠키(DART 쿠키 등)를 사용하여 이용자가 본 웹사이트 및 인터넷상의 다른 웹사이트를 방문한 기록을 바탕으로 광고를 게재합니다.</li>
+        <li>이용자는 <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style="color:var(--peach);">Google 광고 설정</a> 페이지를 방문하여 맞춤형 광고 게재에 사용되는 개인 맞춤 쿠키 설정을 거부(Opt-out)할 수 있습니다.</li>
+        <li>또한, <a href="https://www.aboutads.info/" target="_blank" rel="noopener noreferrer" style="color:var(--peach);">www.aboutads.info</a>를 방문하여 제3자 업체의 쿠키 사용을 전반적으로 차단할 수 있습니다.</li>
+      </ul>
+
+      <h3>4. 제3자 서비스 연동 (Giscus & Formspree)</h3>
+      <p>본 서비스의 댓글 기능은 GitHub Discussions 기반의 'Giscus'를 통해 제공되며, 제휴 문의는 'Formspree' 암호화 API를 통해 전송됩니다. 각 서비스 이용 시 해당 플랫폼의 보안 정책이 적용됩니다.</p>
+
+      <h3>5. 개인정보 보호책임자 및 문의처</h3>
+      <p>개인정보 처리 및 정책에 관한 문의사항은 상단 네비게이션의 <strong>[🤝 제휴 문의]</strong> 폼을 통해 접수해 주시면 신속하게 답변해 드립니다.</p>
+      <p style="font-size:12px; color:var(--muted); margin-top:14px;">본 방침은 2026년 11월 24일부터 적용됩니다.</p>
+    </div>
+  </dialog>
+
+  <!-- Terms of Service Dialog -->
+  <dialog id="terms-dialog" aria-labelledby="terms-title">
+    <div class="dialog-head">
+      <div>
+        <small style="color:var(--peach); font-weight:700;">TERMS OF SERVICE</small>
+        <h2 id="terms-title">서비스 이용약관 (Terms)</h2>
+      </div>
+      <form method="dialog"><button aria-label="닫기">✕</button></form>
+    </div>
+    <div class="legal-content">
+      <h3>제1조 (목적)</h3>
+      <p>본 약관은 밤편지(Bampyeonji)가 제공하는 인터랙티브 웹 콘텐츠 및 제반 서비스의 이용 조건과 권리·의무를 규정함을 목적으로 합니다.</p>
+
+      <h3>제2조 (지식재산권의 귀속)</h3>
+      <ul>
+        <li>서비스 내 게재된 모든 오리지널 단편 문학, 캐릭터 설정, 디자인, 벡터 그래픽, 사운드 코드의 저작권은 밤편지 및 원작자에게 있습니다.</li>
+        <li>이용자는 서비스의 콘텐츠를 사전 승인 없이 상업적 목적으로 복제, 배포, 2차적 저작물 작성 등의 방법으로 이용할 수 없습니다.</li>
+      </ul>
+
+      <h3>제3조 (이용자의 의무 및 게시물 관리)</h3>
+      <p>달빛 방명록(댓글) 이용 시 타인의 권리를 침해하거나 미풍양속을 해치는 내용, 불법 광고, 욕설 및 비방 글은 사전 통보 없이 관리자에 의해 삭제될 수 있습니다.</p>
+
+      <h3>제4조 (면책 조항)</h3>
+      <p>서비스는 무료로 제공되는 디지털 콘텐츠로서 천재지변, 서버 점검, 네트워크 장애 등으로 인한 일시적 중단에 대해 책임을 지지 않습니다.</p>
+      <p style="font-size:12px; color:var(--muted); margin-top:14px;">공고일자: 2026년 11월 24일</p>
+    </div>
   </dialog>
 
   <script>
@@ -1341,6 +1693,101 @@
     $("#guestbook-nav").onclick = () => {
       $("#guestbook").scrollIntoView({ behavior: "smooth" });
     };
+
+    // =========================================================
+    // Literary Essays Archive & Legal Dialogs Logic (Google AdSense Quality Content)
+    // =========================================================
+    const essays = {
+      yuna: {
+        title: "자정의 버스 정류장과 내일로 향하는 시간 여행",
+        meta: "서울 성북동 · SF 단편 문학 해설 · 작가 노트",
+        content: `
+          <h3>1. 성북동 고갯길, 사라진 버스 번호판의 미학</h3>
+          <p>서울의 성북동 골목길은 한양도성의 성곽과 1970년대의 붉은 벽돌 양옥, 그리고 가파른 고갯길이 켜켜이 층을 이루는 독특한 시공간적 층위를 지닙니다. 밤편지의 첫 번째 오리지널 캐릭터 '서유나'의 이야기는 이 가파른 골목길을 매일 밤 마지막으로 오르내리는 심야 버스에서 출발합니다.</p>
+          <p>이야기 속에서 유나가 운전하는 버스는 현실에서는 삼 년 전 노선 개편으로 영구 폐선된 번호입니다. 하지만 성북동의 밤안개가 짙어지는 자정이 넘으면, 폐선된 정류장 표지판 불빛 아래로 시간의 균열이 일어납니다. 이 작품은 단순한 공상과학을 넘어, 급속한 현대화 과정에서 사라져간 서울의 옛 정취와 온기를 SF적 '시간 역전' 모티브로 포착합니다.</p>
+
+          <h3>2. 교통카드 단말기에 찍힌 내일의 날짜</h3>
+          <blockquote style="margin:16px 0; padding:12px 18px; border-left:3px solid var(--peach); background:var(--peach-tint); font-style:italic;">
+            "잠깐만요. 카드 단말기에 내일 날짜가 떠요. 근데 같이 탔다는 사람이 당신인데요?"
+          </blockquote>
+          <p>단말기의 경쾌한 비프음 뒤로 흐르는 기묘한 침묵. 유나의 손에 쥐어진 운행 일지에는 연필로 흐릿하게 그려진 별표가 남아 있습니다. 그것은 어린 시절 그녀의 아버지가 버스 운전대를 잡았을 때 표를 검표하며 남기던 버릇이었습니다. 승객으로 올라탄 '당신'과 버스 기사 유나는 과거와 미래가 교차하는 성북동의 밤길을 달리며, 우리가 미처 작별 인사를 건네지 못한 소중한 사람들과의 시간적 유대를 회복해 나갑니다.</p>
+
+          <h3>3. 작가의 말: 왜 서울 SF인가?</h3>
+          <p>한국적 정서가 담긴 SF는 거대한 우주선이나 차가운 금속성 디스토피아에 머물지 않습니다. 매일 우리가 타는 마을버스의 덜컹거림, 겨울밤 차창에 서리는 입김, 그리고 운전석 룸미러를 통해 스쳐 지나가는 사람들의 눈빛 속에 가장 깊은 시간의 신비가 깃들어 있습니다. 밤편지는 그 사소한 순간들을 문학의 언어로 기록하고자 합니다.</p>
+        `
+      },
+      jun: {
+        title: "영도 바다의 썰물과 잊혀진 등대의 필름",
+        meta: "부산 영도 · 감성 미스터리 단편 해설 · 작가 노트",
+        content: `
+          <h3>1. 조수간만의 차가 빚어낸 시간의 암실</h3>
+          <p>부산 영도의 흰여울마을 절벽 아래에는 거친 파도와 바위틈 사이에 숨겨진 아날로그 흑백 암실이 존재합니다. 바닷물이 가득 차오르는 밀물 때는 입구가 바닷속으로 잠겨 누구도 찾을 수 없지만, 썰물이 되어 바닷물이 빠져나가면 십 분 동안 바닷길이 열립니다.</p>
+          <p>사진관 주인 '문해준'은 디지털 카메라가 지배하는 세상에서 여전히 붉은 안전등 아래 은염 인화지와 현상액의 화학 반응을 고집합니다. 필름을 현상하는 행위는 이미 지나가버린 과거의 빛을 어둠 속에서 다시 건져 올리는 일종의 기억 복원 의식이기 때문입니다.</p>
+
+          <h3>2. 사라진 등대의 미스터리</h3>
+          <blockquote style="margin:16px 0; padding:12px 18px; border-left:3px solid var(--peach); background:var(--peach-tint); font-style:italic;">
+            "방금 맡긴 필름 말이에요. 이 등대, 제가 열 살 때 무너졌는데 어디서 찍으셨어요?"
+          </blockquote>
+          <p>해준이 열 살이 되던 해, 거센 여름 태풍 매미에 의해 영도 절벽 끝의 하얀 무인 등대는 흔적도 없이 무너져 내렸습니다. 그러나 낯선 방문자가 맡긴 필름을 인화하자, 흑백 인화지 위로 그 등대의 불빛이 천천히 회전하며 선명하게 드러납니다. 사진 뒷면에 적힌 주소는 바로 해준의 사진관. 바다는 사라진 것을 삼키는 장소가 아니라, 때가 되면 가장 온전한 형태로 다시 밀어 올려 보내는 거대한 기억의 저장소였던 것입니다.</p>
+
+          <h3>3. 작가의 말: 영도 바다가 건네는 위로</h3>
+          <p>우리는 살아가며 수많은 기억과 인연을 잃어버렸다고 생각합니다. 하지만 물밑에 잠겨 보이지 않을 뿐, 그 기억들은 파도 아래에서 자신만의 빛을 간직하고 있습니다. 해준의 짝짝이 빨간 장화처럼, 조금은 불완전하더라도 바닷길을 함께 걸어줄 누군가가 있다면 우리는 언제든 잃어버린 등대로 다시 향할 수 있습니다.</p>
+        `
+      },
+      sori: {
+        title: "기와 끝 빗소리와 꿈을 연주하는 열두 줄 가야금",
+        meta: "전주 서학동 · 한국 전통 판타지 단편 해설 · 작가 노트",
+        content: `
+          <h3>1. 전주 서학동 예술마을과 명주실의 공명</h3>
+          <p>전주 한옥마을 너머 남천교를 건너면 오랜 세월 서예가와 공예가들이 터를 잡은 서학동 예술마을이 나타납니다. 빗방울이 처마 끝 기와를 타고 낙수물 소리를 낼 때, 악기 수리사 '강소리'의 공방에서는 세상 어디에도 없는 조율 작업이 시작됩니다.</p>
+          <p>한국의 전통 현악기 가야금은 오동나무 몸통에 명주실을 꼬아 만듭니다. 서양의 금속 현과 달리, 누에고치에서 뽑아낸 명주실은 주변의 습도와 바람, 그리고 사람의 체온에 따라 미세하게 숨을 쉽니다. 강소리는 바로 이 살아있는 줄을 통해, 사람들이 미처 말로 다하지 못하고 잠든 밤의 '꿈과 잠꼬대'를 듣는 특별한 감각을 지니고 있습니다.</p>
+
+          <h3>2. 끊어진 줄이 간직한 잃어버린 약속</h3>
+          <blockquote style="margin:16px 0; padding:12px 18px; border-left:3px solid var(--peach); background:var(--peach-tint); font-style:italic;">
+            "문을 살살 닫아 주세요. 이 줄에서 누가 자꾸 잠꼬대를 해서요."
+          </blockquote>
+          <p>공방으로 실려 오는 악기들은 대개 줄이 끊어져 침묵에 잠긴 것들입니다. 사람들은 줄이 끊어지면 소리가 끝났다고 믿지만, 소리는 끊어진 자리에야말로 가장 간절한 진심이 매듭지어져 있음을 압니다. '꼭 다시 데리러 오겠다'는 유년의 약속, 차마 고백하지 못한 미안함이 명주실의 떨림 속에 잠들어 있습니다. 마지막 음을 찾아 줄을 다시 팽팽히 조율하는 순간, 공방 툇마루의 비는 그치고 배롱나무 붉은 꽃잎이 흩날립니다.</p>
+
+          <h3>3. 작가의 말: 한국적 판타지의 서정성</h3>
+          <p>한국의 판타지는 마법 지팡이나 거창한 주문 대신, 자연의 소리와 사람의 마음에 귀를 기울이는 태도에서 피어납니다. 비 오는 날 기와 끝에서 떨어지는 청아한 물방울 소리와 가야금의 농현(弄弦)이 만들어내는 울림은, 지친 현대인의 심장을 가장 부드럽게 쓰다듬어 주는 치유의 주문입니다.</p>
+        `
+      },
+      ian: {
+        title: "철공소 골목 끝, 마지막 35mm 영화 영사기의 온기",
+        meta: "서울 을지로 · 아날로그 로맨스 단편 해설 · 작가 노트",
+        content: `
+          <h3>1. 쇳소리와 필름 돌아가는 소리의 조화</h3>
+          <p>낮에는 쇠를 깎고 자르는 날카로운 기계음이 가득한 을지로 3가의 좁은 인쇄·철공 골목. 그러나 해가 지고 철문들이 셔터를 내리면, 낡은 3층 벽돌 건물 옥상의 단관 극장 '청계시네마'에 나지막한 모터 소리가 피어오릅니다.</p>
+          <p>영사기사 '백이안'은 컴퓨터 파일로 재생되는 디지털 빔프로젝터 대신, 무거운 35mm 셀룰로이드 필름 릴을 손수 돌립니다. 1초에 스물네 번 어둠과 빛이 교차하며 뿜어내는 영사 램프의 뜨거운 열기야말로, 살아있는 사람의 체온과 가장 닮아 있다고 믿기 때문입니다.</p>
+
+          <h3>2. 관객이 주인공이 되는 마지막 상영표</h3>
+          <blockquote style="margin:16px 0; padding:12px 18px; border-left:3px solid var(--peach); background:var(--peach-tint); font-style:italic;">
+            "표 한 장 남겨 뒀어요. 영화는 이미 시작했는데, 제일 좋은 장면은 아직이에요."
+          </blockquote>
+          <p>이안이 상영하는 영화에는 제목도, 유명한 배우도 나오지 않습니다. 재개발로 곧 철거될 골목길의 인쇄소 사장님, 백반집 할머니, 퇴근길 청년들이 지난 1년간 찍어둔 일상의 필름 조각들을 이안이 손수 이어 붙여 만든 '우리들의 영화'입니다. 객석 다섯째 줄에 앉으면 영사실 유리창에 비친 이안의 따스한 눈빛과 마주치게 됩니다. 화면 속 작년의 당신이 오늘 앉아있는 현재의 당신을 향해 미소 짓는 순간, 영화는 단순한 오락을 넘어 존재를 증명하는 기적이 됩니다.</p>
+
+          <h3>3. 작가의 말: 사라져가는 것들에 대한 사랑</h3>
+          <p>새롭고 빠른 것만이 찬양받는 시대이지만, 어떤 사랑은 천천히 돌아가는 필름처럼 손때가 묻고 온기가 축적되어야 비로소 형태를 갖춥니다. 을지로의 차가운 빌딩 숲 사이에서 작은 상영표 두 장을 주머니에 넣고 누군가를 기다리는 설렘, 밤편지가 독자 여러분과 나누고 싶은 가장 소중한 로맨스의 형태입니다.</p>
+        `
+      }
+    };
+
+    function openEssay(id) {
+      const item = essays[id];
+      if (!item) return;
+      $("#essay-title").textContent = item.title;
+      $("#essay-meta").textContent = item.meta;
+      $("#essay-body").innerHTML = item.content;
+      $("#essay-dialog").showModal();
+    }
+
+    $("#lore-nav").onclick = () => {
+      $("#lore").scrollIntoView({ behavior: "smooth" });
+    };
+
+    $("#about-btn").onclick = () => $("#about-dialog").showModal();
+    $("#privacy-btn").onclick = () => $("#privacy-dialog").showModal();
+    $("#terms-btn").onclick = () => $("#terms-dialog").showModal();
 
     function initGiscus() {
       const wrap = document.querySelector(".giscus-frame-wrap");
